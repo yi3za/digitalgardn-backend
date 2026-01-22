@@ -5,6 +5,7 @@
 #--------------------------------
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\MeController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth;
@@ -20,5 +21,7 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         // Recuperer l'utilisateur actuellement authentifie
         Route::get('me', [MeController::class, 'me']);
+        // Deconnecter l'utilisateur authentifie
+        Route::post('logout',[LogoutController::class,'logout']);
     });
 });
