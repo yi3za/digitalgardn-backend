@@ -5,6 +5,7 @@
 #--------------------------------
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\MeController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,9 @@ Route::prefix('auth')->group(function () {
     Route::post('register', [RegisterController::class, 'register']);
     // Gere connexion d'utilisateur
     Route::post('login', [LoginController::class, 'login']);
+    // Routes protegees par sanctum
+    Route::middleware('auth:sanctum')->group(function () {
+        // Recuperer l'utilisateur actuellement authentifie
+        Route::get('me', [MeController::class, 'me']);
+    });
 });
