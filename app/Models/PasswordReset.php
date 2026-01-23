@@ -14,6 +14,10 @@ class PasswordReset extends Model
     public $incrementing = false;
     // La table ne contient pas les champs (created_at & updated_at)
     public $timestamps = false;
+    // Convertit automatiquement created_at en objet Carbon
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
     // Champs autorises pour l'insertion et la mise a jour
     protected $fillable = [
         'email','token','created_at'
