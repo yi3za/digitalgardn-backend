@@ -12,6 +12,17 @@ Backend de l'application Digitalgardn, une plateforme de mise en relation entre 
 
 ---
 
+## Fonctionnalites implementees
+
+- ✅ **Systeme d'authentification complet :**
+  - Inscription (Register)
+  - Connexion (Login)
+  - Deconnexion (Logout)
+  - Recuperation de l'utilisateur connecte (`/api/auth/me`)
+  - Processus de reinitialisation de mot de passe
+
+---
+
 ## Installation et Lancement
 
 Suivez ces etapes pour configurer et lancer le projet sur votre machine locale.
