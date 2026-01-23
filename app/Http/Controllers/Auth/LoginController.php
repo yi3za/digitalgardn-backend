@@ -21,6 +21,7 @@ class LoginController extends Controller
         }
         // Authentification reussie
         return response()->json([
+            // Retourne l'utilisant authentifie
             'user' => Auth::user(),
         ], 200);
     }

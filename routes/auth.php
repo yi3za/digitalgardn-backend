@@ -4,12 +4,12 @@
 # Routes d'authentification API
 #--------------------------------
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\MeController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Support\Facades\Route;
 
 // Regroupe toutes les routes liees a l'authentification "/auth"
 Route::prefix('auth')->group(function () {
