@@ -56,4 +56,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profil::class);
     }
+    /**
+     * Evenement declenche apres la creation d'un utilisateur
+     * Si l'utilisateur est un freelance, cree automatiquement un profil vide
+     */
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            if ($user->role === 'freelance')
+                $user->profil()->create();
+        });
+    }
 }
