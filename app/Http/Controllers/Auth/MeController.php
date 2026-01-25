@@ -3,12 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class MeController extends Controller
 {
-    public function me(){
-        // Retourne les informations de l'utilisateur qui connecte
-        return Auth::user();
+    /**
+     * Retourne les informations de l'utilisateur connecte
+     */
+    public function me(Request $request)
+    {
+        return response()->json(
+            [
+                'user' => $request->user(),
+            ],
+            200,
+        );
     }
 }

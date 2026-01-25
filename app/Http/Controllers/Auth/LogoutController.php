@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
+    /**
+     * Deconnexion d'un utilisateur
+     */
     public function logout()
     {
         // Si l'utilisateur est authentifie
