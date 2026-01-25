@@ -22,8 +22,8 @@ class ResetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:255','exists:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-            'code' => ['required','string','size:6'],
+            'email' => ['required', 'string', 'email', 'max:255', 'exists:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
+            'code' => ['required', 'string', 'size:6'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

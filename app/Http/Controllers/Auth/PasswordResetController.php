@@ -14,9 +14,12 @@ use function Symfony\Component\Clock\now;
 
 class PasswordResetController extends Controller
 {
+    /**
+     * Envoie un code de reinitialisation du mot de passe a l'utilisateur
+     */
     public function sendCode(SendRequest $request)
     {
-        // Valider l'email
+        // Recuperation de l'email de l'utilisateur
         $email = $request->validated()['email'];
         // Chercher l'utilisateur par email
         $user = User::where('email', $email)->first();
@@ -28,18 +31,20 @@ class PasswordResetController extends Controller
         $code_verification = (string) rand(111111, 999999);
         // Enregistrer ou mettre a jour le code dans la table password_reset_tokens
         PasswordReset::updateOrCreate(
-            ['email' => $email] // Condition pour trouver l'enregistrement
-            ,
+            ['email' => $email], // Condition pour trouver l'enregistrement
             [
                 'token' => $code_verification,
                 'created_at' => now(),
-            ]
+            ],
         );
         // Envoyer le mail avec le code de reinitialisation
         Mail::to($email)->send(new ResetPasswordCodeMail($code_verification));
         // Retourner une reponse de succes
         return response()->json([], 200);
     }
+    /**
+     * Reinitialise le mot de passe de l'utilisateur en utilisant le code de verification
+     */
     public function resetPassword(ResetRequest $request)
     {
         // Recuperation des donnees
@@ -56,7 +61,7 @@ class PasswordResetController extends Controller
         // Succes : mise a jour de mot de passe de l'utilisateur
         $user = User::where('email', $email)->first();
         $user->update([
-            'password' => $password
+            'password' => $password,
         ]);
         // Supprimer le code pour de raisons de securite
         $exists->delete();
