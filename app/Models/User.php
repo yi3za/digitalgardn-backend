@@ -20,9 +20,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
-        'role',
         'email',
         'password',
+        'role',
+        'statut',
+        'avatar',
+        'derniere_connexion',
     ];
 
     /**
@@ -45,5 +48,12 @@ class User extends Authenticatable
             // 'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * Rolation : un utilisateur possede un seul profil
+     */
+    public function profil()
+    {
+        return $this->hasOne(Profil::class);
     }
 }
