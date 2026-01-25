@@ -29,4 +29,14 @@ class RegisterRequest extends FormRequest
             'role' => ['required', 'in:freelance,client'],
         ];
     }
+    /**
+     * Conversion de l'email et du nom d'utilisateur en minuscules avant la validation
+     */
+    protected function prepareForValidation()
+    {
+        return $this->merge([
+            'username' => strtolower($this->input('username')),
+            'email' => strtolower($this->input('email')),
+        ]);
+    }
 }
