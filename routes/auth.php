@@ -13,10 +13,13 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Regroupe toutes les routes liees a l'authentification "/auth"
 Route::prefix('auth')->group(function () {
-    // Enregistrement d'un nouvel utilisateur
-    Route::post('register', [RegisterController::class, 'register']);
-    // Gere connexion d'utilisateur
-    Route::post('login', [LoginController::class, 'login']);
+    // Ce groupe est reserve aux utilisateurs **non authentifies** (guests)
+    Route::middleware('guest')->group(function () {
+        // Enregistrement d'un nouvel utilisateur
+        Route::post('register', [RegisterController::class, 'register']);
+        // Gere connexion d'utilisateur
+        Route::post('login', [LoginController::class, 'login']);
+    });
     // Envoie un code de reinitialisation du mot de passe a l'utilisateur
     Route::post('forget-password', [PasswordResetController::class, 'sendCode']);
     // Reinitialise le mot de passe en utilisant le code recu
