@@ -8,21 +8,25 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Connexion d'un utilisateur
+     */
     public function login(LoginRequest $request)
     {
         // Donnees validees
         $data = $request->validated();
-        // Conversion de l'email en minuscules
-        $data['email'] = strtolower($data['email']);
         // Tentative d'authentification
         if (!Auth::attempt($data)) {
             // Echec d'authentification
             return response()->json([], 401);
         }
         // Authentification reussie
-        return response()->json([
-            // Retourne l'utilisant authentifie
-            'user' => Auth::user(),
-        ], 200);
+        return response()->json(
+            [
+                // Retourne l'utilisant authentifie
+                'user' => Auth::user(),
+            ],
+            200,
+        );
     }
 }
