@@ -6,7 +6,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\AccountController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -44,6 +43,8 @@ Route::prefix('auth')->group(function () {
                 Route::get('', 'show');
                 // Modifier les infos du compte
                 Route::put('', 'update');
+                // Changer le mot de passe
+                Route::post('change-password','changePassword');
                 // Supprimer le compte
                 Route::delete('', 'destroy');
                 // Deconnexion de l'utilisateur

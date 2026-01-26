@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\Password\ChangePasswordRequest;
 use App\Http\Requests\Auth\UpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
@@ -38,6 +40,27 @@ class AccountController extends Controller
         $user->update($data);
         // Retourner statut 200 avec l'utilisateur mis a jour
         return response()->json(['user' => $user], 200);
+    }
+    /**
+     * Changer le mot de passe de l'utilisateur
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        // Recuperer l'utilisateur actuellement authentifie
+        $user = $request->user();
+        // Valider et Recuperer les donnees de formulaire (ancien et nouveau mot de passe)
+        $data = $request->validated();
+        // Verifier que l'ancien mot de passe fourni correspond au mot de passe actuel de l'utilisateur
+        if (!Hash::check($data['old_password'], $user->password)) {
+            // Si le mot de passe ancien est incorrect, retourner une reponse JSON avec code 422
+            return response()->json([], 422);
+        }
+        // Mettre a jour le mot de passe de l'utilisateur
+        $user->update([
+            'password' => $data['new_password'],
+        ]);
+        // Retourner une reponse JSON indiquant que l'operation a reussi avec code 200
+        return response()->json([], 200);
     }
     /**
      * Supprime le compte de l'utilisateur connecte
