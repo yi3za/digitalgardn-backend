@@ -7,13 +7,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\MeController;
+use App\Http\Controllers\Auth\AccountController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 
-// Regroupe toutes les routes liees a l'authentification "/auth"
+/**
+ * Regroupe toutes les routes liees a l'authentification "/auth"
+ */
 Route::prefix('auth')->group(function () {
-    // Ce groupe est reserve aux utilisateurs **non authentifies** (guests)
+    /**
+     * Ce groupe est reserve aux utilisateurs **non authentifies** (guests)
+     */
     Route::middleware('guest')->group(function () {
         // Enregistrement d'un nouvel utilisateur
         Route::post('register', [RegisterController::class, 'register']);
@@ -24,15 +28,26 @@ Route::prefix('auth')->group(function () {
     Route::post('forget-password', [PasswordResetController::class, 'sendCode']);
     // Reinitialise le mot de passe en utilisant le code recu
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
-    /*
-    Routes protegees par :
-    - auth:sanctum : Authentification via cookies (verifie que l'utilisateur est connecte)
-    - activity : Mettre a jour la derniere activite de l'utilisateur
-    */
-    Route::middleware(['auth:sanctum','activity'])->group(function () {
-        // Recuperer l'utilisateur actuellement authentifie
-        Route::get('me', [MeController::class, 'me']);
-        // Deconnecter l'utilisateur authentifie
-        Route::post('logout', [LogoutController::class, 'logout']);
+    /**
+     * Routes protegees par :
+     * - auth:sanctum : Authentification via cookies (verifie que l'utilisateur est connecte)
+     * - activity : Mettre a jour la derniere activite de l'utilisateur
+     */
+    Route::middleware(['auth:sanctum', 'activity'])->group(function () {
+        /**
+         * Routes de gestion du compte utilisateur connecte (/me)
+         */
+        Route::controller(AccountController::class)
+            ->prefix('me')
+            ->group(function () {
+                // Recuperer les infos du compte
+                Route::get('', 'show');
+                // Modifier les infos du compte
+                Route::put('', 'update');
+                // Supprimer le compte
+                Route::delete('', 'destroy');
+                // Deconnexion de l'utilisateur
+                Route::post('logout', 'logout');
+            });
     });
 });
