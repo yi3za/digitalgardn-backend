@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,13 +24,26 @@ class AccountController extends Controller
     /**
      * Modifier les informations de l'utilisateur connecte
      */
-    public function update(Request $request){
-        //
+    public function update(UpdateRequest $request)
+    {
+        // Recuperer l'utilisateur qui est connecte
+        $user = $request->user();
+        // Recuperer les donnees validees
+        $data = $request->validated();
+        // Verifie si un avatar a ete envoye
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+        // Modifier les informations envoyees
+        $user->update($data);
+        // Retourner statut 200 avec l'utilisateur mis a jour
+        return response()->json(['user' => $user], 200);
     }
     /**
-     *
+     * Supprime le compte de l'utilisateur connecte
      */
-    public function destroy(Request $request){
+    public function destroy(Request $request)
+    {
         // Recuperer l'utilisateur authentifie
         $user = $request->user();
         // Supprimer le compte de l'utilisateur
