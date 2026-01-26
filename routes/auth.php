@@ -24,8 +24,12 @@ Route::prefix('auth')->group(function () {
     Route::post('forget-password', [PasswordResetController::class, 'sendCode']);
     // Reinitialise le mot de passe en utilisant le code recu
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
-    // Routes protegees par sanctum
-    Route::middleware('auth:sanctum')->group(function () {
+    /*
+    Routes protegees par :
+    - auth:sanctum : Authentification via cookies (verifie que l'utilisateur est connecte)
+    - activity : Mettre a jour la derniere activite de l'utilisateur
+    */
+    Route::middleware(['auth:sanctum','activity'])->group(function () {
         // Recuperer l'utilisateur actuellement authentifie
         Route::get('me', [MeController::class, 'me']);
         // Deconnecter l'utilisateur authentifie
