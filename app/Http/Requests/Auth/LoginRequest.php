@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class LoginRequest extends FormRequest
+/**
+ * Requete pour la connexion des utilisateurs
+ * Herite de AuthNormalizationRequest pour normaliser username et email avant validation
+ */
+class LoginRequest extends AuthNormalizationRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +27,5 @@ class LoginRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'exists:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'password' => ['required', 'string', 'min:8'],
         ];
-    }
-    /**
-     * Conversion de l'email en minuscules avant la validation
-     */
-    protected function prepareForValidation()
-    {
-        return $this->merge([
-            'email' => strtolower($this->input('email')),
-        ]);
     }
 }

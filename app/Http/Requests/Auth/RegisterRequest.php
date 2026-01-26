@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class RegisterRequest extends FormRequest
+/**
+ * Requete pour l'inscription des utilisateurs
+ * Herite de AuthNormalizationRequest pour normaliser username et email avant validation
+ */
+class RegisterRequest extends AuthNormalizationRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,17 +29,7 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:freelance,client'],
-            'avatar' => ['nullable','image','mimes:jpeg,jpg,png,webp','max:2048']
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ];
-    }
-    /**
-     * Conversion de l'email et du nom d'utilisateur en minuscules avant la validation
-     */
-    protected function prepareForValidation()
-    {
-        return $this->merge([
-            'username' => strtolower($this->input('username')),
-            'email' => strtolower($this->input('email')),
-        ]);
     }
 }
