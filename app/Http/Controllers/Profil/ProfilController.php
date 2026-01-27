@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Profil;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Profil\UpdateRequest;
 use Illuminate\Http\Request;
 
 class ProfilController extends Controller
@@ -22,8 +23,20 @@ class ProfilController extends Controller
     /**
      * Modifier les informations du profil de l'utilisateur connecte
      */
-    public function update()
+    public function update(UpdateRequest $request)
     {
-        //
+        // Recuperer l'utilisateur qui est connecte
+        $user = $request->user();
+        // Recuperer les donnees validees
+        $data = $request->validated();
+        // Verifie si une image de couverture a ete envoyee
+        if ($request->hasFile('image_couverture')) {
+            // Stocke l'image de couverture envoyee dans le dossier 'images_couvertures' du disque 'public'
+            $data['image_couverture'] = $request->file('image_couverture')->store('images_couvertures', 'public');
+        }
+        // Modifier les informations envoyees
+        $user->profil()->update($data);
+        // Retourner statut 200 avec le profil mis a jour
+        return response()->json(['profil' => $user->profil], 200);
     }
 }
