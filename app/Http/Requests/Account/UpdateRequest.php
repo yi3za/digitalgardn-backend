@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Account;
+use App\Http\Requests\Auth\AuthNormalizationRequest;
 
 /**
  * Requete pour le mise a jour des informations utilisateur

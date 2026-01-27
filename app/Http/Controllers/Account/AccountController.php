@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Account\UpdateRequest;
 use App\Http\Requests\Auth\Password\ChangePasswordRequest;
-use App\Http\Requests\Auth\UpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
