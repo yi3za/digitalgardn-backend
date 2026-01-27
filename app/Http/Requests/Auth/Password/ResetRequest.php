@@ -4,6 +4,9 @@ namespace App\Http\Requests\Auth\Password;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Requete pour reinitialiser le mot de passe de l'utilisateur en utilisant le code de verification envoye par e-mail
+ */
 class ResetRequest extends FormRequest
 {
     /**

@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Gestion des actions liees au compte de l utilisateur connecte
+ */
 class AccountController extends Controller
 {
     /**
@@ -24,42 +27,43 @@ class AccountController extends Controller
         );
     }
     /**
-     * Modifier les informations de l'utilisateur connecte
+     * Modifie les informations de l'utilisateur connecte
      */
     public function update(UpdateRequest $request)
     {
-        // Recuperer l'utilisateur qui est connecte
+        // Recupere l'utilisateur qui est connecte
         $user = $request->user();
-        // Recuperer les donnees validees
+        // Recupere les donnees validees
         $data = $request->validated();
         // Verifie si un avatar a ete envoye
         if ($request->hasFile('avatar')) {
+            // Stocke l'avatar envoye dans le dossier 'avatars' sur le disque 'public'
             $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
-        // Modifier les informations envoyees
+        // Modifie les informations envoyees
         $user->update($data);
-        // Retourner statut 200 avec l'utilisateur mis a jour
+        // Retourne statut 200 avec l'utilisateur mis a jour
         return response()->json(['user' => $user], 200);
     }
     /**
-     * Changer le mot de passe de l'utilisateur
+     * Change le mot de passe de l'utilisateur
      */
     public function changePassword(ChangePasswordRequest $request)
     {
-        // Recuperer l'utilisateur actuellement authentifie
+        // Recupere l'utilisateur actuellement authentifie
         $user = $request->user();
-        // Valider et Recuperer les donnees de formulaire (ancien et nouveau mot de passe)
+        // Valide et Recupere les donnees de formulaire (ancien et nouveau mot de passe)
         $data = $request->validated();
-        // Verifier que l'ancien mot de passe fourni correspond au mot de passe actuel de l'utilisateur
+        // Verifie que l'ancien mot de passe fourni correspond au mot de passe actuel de l'utilisateur
         if (!Hash::check($data['old_password'], $user->password)) {
-            // Si le mot de passe ancien est incorrect, retourner une reponse JSON avec code 422
+            // Si le mot de passe ancien est incorrect, retourne une reponse JSON avec code 422
             return response()->json([], 422);
         }
         // Mettre a jour le mot de passe de l'utilisateur
         $user->update([
             'password' => $data['new_password'],
         ]);
-        // Retourner une reponse JSON indiquant que l'operation a reussi avec code 200
+        // Retourne une reponse JSON indiquant que l'operation a reussi avec code 200
         return response()->json([], 200);
     }
     /**
@@ -67,11 +71,11 @@ class AccountController extends Controller
      */
     public function destroy(Request $request)
     {
-        // Recuperer l'utilisateur authentifie
+        // Recupere l'utilisateur authentifie
         $user = $request->user();
-        // Supprimer le compte de l'utilisateur
+        // Supprime le compte de l'utilisateur
         $user->delete();
-        // Retourner une response vide (204 Not Content)
+        // Retourne une response vide (204 Not Content)
         return response()->noContent();
     }
     /**
@@ -81,9 +85,9 @@ class AccountController extends Controller
     {
         // Verifie si l'utilisateur est authentifie
         if (Auth::check()) {
-            // Deconnecter l'utilisateur (session web)
+            // Deconnecte l'utilisateur (session web)
             Auth::guard('web')->logout();
-            // Retourner une response vide (204 Not Content)
+            // Retourne une response vide (204 Not Content)
             return response()->noContent();
         }
         // Sinon renvoyer 401 Unauthorized

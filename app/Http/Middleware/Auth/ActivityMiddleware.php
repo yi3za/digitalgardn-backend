@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function Symfony\Component\Clock\now;
 
+/**
+ * Middleware pour mettre à jour la derniere activite
+ */
 class ActivityMiddleware
 {
     /**
@@ -17,13 +20,13 @@ class ActivityMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Recuperer l'utilisateur authentifie
+        // Recupere l'utilisateur authentifie
         $user = $request->user();
-        // Mettre a jour la derniere activite
+        // Met a jour la derniere activite de l'utilisateur sans declencher les evenements
         $user->updateQuietly([
             'derniere_activite' => now(),
         ]);
-        // Continuer la requete
+        // Passe la requete
         return $next($request);
     }
 }

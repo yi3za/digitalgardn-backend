@@ -4,6 +4,9 @@ namespace App\Http\Requests\Auth\Password;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Requete pour l'envoi du code de reinitialisation du mot de passe a l'adresse e-mail de l'utilisateur
+ */
 class SendRequest extends FormRequest
 {
     /**

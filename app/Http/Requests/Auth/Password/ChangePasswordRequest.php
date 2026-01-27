@@ -4,6 +4,9 @@ namespace App\Http\Requests\Auth\Password;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Requete pour changer le mot de passe de l'utilisateur connecte en verifiant l'ancien mot de passe
+ */
 class ChangePasswordRequest extends FormRequest
 {
     /**

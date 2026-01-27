@@ -13,14 +13,14 @@ use App\Http\Controllers\Account\AccountController;
 Route::controller(AccountController::class)
     ->prefix('me')
     ->group(function () {
-        // Recuperer les infos du compte
+        // Recupere les informations du compte utilisateur connecte
         Route::get('', 'show');
-        // Modifier les infos du compte
+        // Modifie les informations du compte utilisateur connecte
         Route::put('', 'update');
-        // Changer le mot de passe
+        // Change le mot de passe du compte utilisateur connecte
         Route::post('change-password', 'changePassword');
-        // Supprimer le compte
+        // Supprime le compte utilisateur connecte
         Route::delete('', 'destroy');
-        // Deconnexion de l'utilisateur
+        // Deconnecte l'utilisateur
         Route::post('logout', 'logout');
     });

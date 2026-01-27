@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Mail;
 
 use function Symfony\Component\Clock\now;
 
+/**
+ * Gestion de la recuperation et de la reinitialisation du mot de passe
+ */
 class PasswordResetController extends Controller
 {
     /**
@@ -39,7 +42,7 @@ class PasswordResetController extends Controller
         );
         // Envoyer le mail avec le code de reinitialisation
         Mail::to($email)->send(new ResetPasswordCodeMail($code_verification));
-        // Retourner une reponse de succes
+        // Retourne une reponse du succes
         return response()->json([], 200);
     }
     /**
@@ -55,7 +58,7 @@ class PasswordResetController extends Controller
         $exists = PasswordReset::where(['email' => $email, 'token' => $code])->first();
         // Verification de validite de code
         if (!$exists || $exists->created_at->addMinutes(10)->isPast()) {
-            // Echec : Retourner un code HTTP 422 donnees non valides
+            // Echec : Retourne un code HTTP 422 lorsque les donnees ne sont pas valides
             return response()->json([], 422);
         }
         // Succes : mise a jour de mot de passe de l'utilisateur
@@ -65,7 +68,7 @@ class PasswordResetController extends Controller
         ]);
         // Supprimer le code pour de raisons de securite
         $exists->delete();
-        // Retourner succes avec code HTTP 200
+        // Retourne une reponse du succes
         return response()->json([], 200);
     }
 }

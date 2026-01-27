@@ -13,8 +13,8 @@ use App\Http\Controllers\Profil\ProfilController;
 Route::controller(ProfilController::class)
     ->prefix('profil')
     ->group(function () {
-        // Recuperer les informations du profil
+        // Recupere les informations du profil
         Route::get('', 'show');
-        // Modifier les informations du profil
+        // Modifie les informations du profil
         Route::put('', 'update');
     });

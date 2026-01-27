@@ -16,17 +16,17 @@ abstract class AuthNormalizationRequest extends FormRequest
     {
         // Tableau temporaire pour stocker les champs a normaliser
         $data = [];
-        // Verifier si le champ "username" est present dans la requete
+        // Verifie si le champ "username" est present dans la requete
         if ($this->has('username')) {
             // Conversion du nom d'utilisateur en minuscules
             $data['username'] = strtolower($this->input('username'));
         }
-        // Verifier si le champ "email" est present dans la requete
+        // Verifie si le champ "email" est present dans la requete
         if ($this->has('email')) {
             // Conversion de l'adresse email en minuscules
             $data['email'] = strtolower($this->input('email'));
         }
-        // Fusionner les donnees normalisees avec la requete avant validation
+        // Fusionne les donnees normalisees avec la requete avant validation
         return $this->merge($data);
     }
 }

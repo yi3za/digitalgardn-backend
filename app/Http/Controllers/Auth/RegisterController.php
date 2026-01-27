@@ -7,6 +7,9 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Gestion de la creation et de l enregistrement des nouveaux utilisateurs
+ */
 class RegisterController extends Controller
 {
     /**

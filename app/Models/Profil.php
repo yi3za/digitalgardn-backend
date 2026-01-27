@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Model : Profil
+ * Database : profils
+ */
 class Profil extends Model
 {
     // Definition de la cle primaire
@@ -11,14 +15,7 @@ class Profil extends Model
     // Desactivation de l'auto-incrementation car user_id est fourni depuis la table users
     public $incrementing = false;
     // Champs pouvant etre remplis en masse
-    protected $fillable = [
-        'user_id',
-        'titre',
-        'biographie',
-        'image_couverture',
-        'site_web',
-        'liens_sociaux',
-    ];
+    protected $fillable = ['user_id', 'titre', 'biographie', 'image_couverture', 'site_web', 'liens_sociaux'];
     /**
      * Relation : un profil appartient a un seul utilisateur
      */

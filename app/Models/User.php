@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+/**
+ * Model : User
+ * Database : users
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -17,25 +21,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'password',
-        'role',
-        'statut',
-        'avatar',
-        'derniere_activite',
-    ];
+    protected $fillable = ['name', 'username', 'email', 'password', 'role', 'statut', 'avatar', 'derniere_activite'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-    ];
+    protected $hidden = ['password'];
     /**
      * Get the attributes that should be cast.
      *
@@ -46,7 +39,7 @@ class User extends Authenticatable
         return [
             // 'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'derniere_activite' => 'datetime'
+            'derniere_activite' => 'datetime',
         ];
     }
     /**
@@ -63,8 +56,9 @@ class User extends Authenticatable
     protected static function booted()
     {
         static::created(function ($user) {
-            if ($user->role === 'freelance')
+            if ($user->role === 'freelance') {
                 $user->profil()->create();
+            }
         });
     }
 }

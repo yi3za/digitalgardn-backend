@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Model : PasswordReset
+ * Database : password_reset_tokens
+ */
 class PasswordReset extends Model
 {
     // Nom de la table associee a ce model
@@ -16,10 +20,8 @@ class PasswordReset extends Model
     public $timestamps = false;
     // Convertit automatiquement created_at en objet Carbon
     protected $casts = [
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
     // Champs autorises pour l'insertion et la mise a jour
-    protected $fillable = [
-        'email','token','created_at'
-    ];
+    protected $fillable = ['email', 'token', 'created_at'];
 }

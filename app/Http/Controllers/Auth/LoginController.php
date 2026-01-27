@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Gestion de l authentification et de la connexion des utilisateurs
+ */
 class LoginController extends Controller
 {
     /**
@@ -23,7 +26,7 @@ class LoginController extends Controller
         // Authentification reussie
         return response()->json(
             [
-                // Retourne l'utilisant authentifie
+                // Retourne l'utilisateur authentifie
                 'user' => Auth::user(),
             ],
             200,
