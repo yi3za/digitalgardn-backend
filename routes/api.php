@@ -17,4 +17,6 @@ require __DIR__ . '/auth.php';
 Route::middleware(['auth:sanctum', 'activity'])->group(function () {
     // Inclusion des routes de gestion du compte utilisateur connecte
     require __DIR__ . '/account.php';
+    // Inclusion des routes de gestion du profil utilisateur connecte
+    require __DIR__ . '/profil.php';
 });
