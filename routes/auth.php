@@ -23,10 +23,13 @@ Route::prefix('auth')->group(function () {
         // Gere connexion d'utilisateur
         Route::post('login', [LoginController::class, 'login']);
     });
-    // Envoie un code de reinitialisation du mot de passe a l'utilisateur
-    Route::post('forget-password', [PasswordResetController::class, 'sendCode']);
-    // Reinitialise le mot de passe en utilisant le code recu
-    Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
+    /**
+     * Routes de reinitialisation du mot de passe de l'utilisateur
+     */
+    Route::controller(PasswordResetController::class)->group(function () {
+        Route::post('forget-password', 'sendCode');
+        Route::post('reset-password', 'resetPassword');
+    });
     /**
      * Routes protegees par :
      * - auth:sanctum : Authentification via cookies (verifie que l'utilisateur est connecte)
@@ -44,7 +47,7 @@ Route::prefix('auth')->group(function () {
                 // Modifier les infos du compte
                 Route::put('', 'update');
                 // Changer le mot de passe
-                Route::post('change-password','changePassword');
+                Route::post('change-password', 'changePassword');
                 // Supprimer le compte
                 Route::delete('', 'destroy');
                 // Deconnexion de l'utilisateur
