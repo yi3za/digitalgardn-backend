@@ -9,8 +9,10 @@ use App\Http\Controllers\Profil\ProfilController;
 
 /**
  * Routes pour le profil de l'utilisateur connecte (/profil)
+ * Ce groupe est reserve aux utilisateurs freelance
  */
-Route::controller(ProfilController::class)
+Route::middleware('role:freelance')
+    ->controller(ProfilController::class)
     ->prefix('profil')
     ->group(function () {
         // Recupere les informations du profil
