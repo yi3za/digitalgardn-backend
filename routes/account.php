@@ -19,6 +19,8 @@ Route::controller(AccountController::class)
         Route::put('', 'update');
         // Change le mot de passe du compte utilisateur connecte
         Route::post('change-password', 'changePassword');
+        // Mettre a jour le statut du compte utilisateur
+        Route::post('status','updateStatus');
         // Supprime le compte utilisateur connecte
         Route::delete('', 'destroy');
         // Deconnecte l'utilisateur
