@@ -19,4 +19,11 @@ class Service extends Model
     {
         return $this->belongsTo(User::class);
     }
+    /**
+     * Relation : un service appartient a plusieurs categories
+     */
+    public function categories()
+    {
+        return $this->hasMany(Categorie::class);
+    }
 }

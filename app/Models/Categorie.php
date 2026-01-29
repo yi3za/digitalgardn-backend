@@ -26,4 +26,11 @@ class Categorie extends Model
     {
         return $this->hasMany(Categorie::class, 'parent_id');
     }
+    /**
+     * Relation : une categorie possede plusieurs services
+     */
+    public function services()
+    {
+        return $this->belongsToMany(Service::class);
+    }
 }
