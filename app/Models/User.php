@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * Model : User
- * Database : users
+ * Table : users
  */
 class User extends Authenticatable
 {

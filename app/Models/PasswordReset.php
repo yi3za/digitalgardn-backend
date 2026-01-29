@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Model : PasswordReset
- * Database : password_reset_tokens
+ * Table : password_reset_tokens
  */
 class PasswordReset extends Model
 {

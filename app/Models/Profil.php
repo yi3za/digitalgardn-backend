@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Model : Profil
- * Database : profils
+ * Table : profils
  */
 class Profil extends Model
 {
+    // Permet d'utiliser les factories pour ce modele
+    use HasFactory;
     // Definition de la cle primaire
     protected $primaryKey = 'user_id';
     // Desactivation de l'auto-incrementation car user_id est fourni depuis la table users

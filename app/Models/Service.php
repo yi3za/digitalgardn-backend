@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Model : Service
- * Database : services
+ * Table : services
  */
 class Service extends Model
 {
+    // Permet d'utiliser les factories pour ce modele
+    use HasFactory;
     // Champs pouvant etre remplis en masse
     protected $fillable = ['user_id', 'titre', 'slug', 'description', 'prix_base', 'delai_livraison', 'revisions', 'statut', 'ventes', 'note_moyenne'];
     /**
@@ -24,7 +27,7 @@ class Service extends Model
      */
     public function categories()
     {
-        return $this->hasMany(Categorie::class);
+        return $this->hasMany(Categorie::class)->orderBy('ordre');
     }
     /**
      * Relation : un service possede plusieurs fichiers
