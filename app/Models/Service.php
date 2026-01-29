@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Model : Service
+ * Database : services
+ */
+class Service extends Model
+{
+    // Champs pouvant etre remplis en masse
+    protected $fillable = ['user_id', 'titre', 'slug', 'description', 'prix_base', 'delai_livraison', 'revisions', 'statut', 'ventes', 'note_moyenne'];
+    /**
+     * Relation : un service appartient a un seul utilisateur
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}

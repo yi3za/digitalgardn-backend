@@ -43,11 +43,18 @@ class User extends Authenticatable
         ];
     }
     /**
-     * Rolation : un utilisateur possede un seul profil
+     * Relation : un utilisateur possede un seul profil
      */
     public function profil()
     {
         return $this->hasOne(Profil::class);
+    }
+    /**
+     * Relation : un utilisateur possede plusieurs services
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
     }
     /**
      * Evenement declenche apres la creation d'un utilisateur
