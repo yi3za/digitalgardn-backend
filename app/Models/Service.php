@@ -27,7 +27,7 @@ class Service extends Model
      */
     public function categories()
     {
-        return $this->hasMany(Categorie::class)->orderBy('ordre');
+        return $this->belongsToMany(Categorie::class)->orderBy('ordre');
     }
     /**
      * Relation : un service possede plusieurs fichiers
