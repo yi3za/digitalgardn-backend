@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 // Inclusion des routes d'authentification
 require __DIR__ . '/auth.php';
+// Inclusion des routes publiques des catalogues
+require __DIR__ . '/catalog/public/catalog.php';
 
 /**
  * Routes protegees par :
