@@ -27,9 +27,11 @@ class ServiceFactory extends Factory
             'prix_base' => $this->faker->randomFloat(2, 10, 500),
             'delai_livraison' => $this->faker->numberBetween(1, 30),
             'revisions' => $this->faker->numberBetween(0, 5),
-            'statut' => $this->faker->randomElement(['actif', 'en_pause', 'en_attente_approbation', 'rejete']),
+            'statut' => $this->faker->randomElement(['publie', 'en_pause', 'en_attente_approbation', 'rejete']),
             'ventes' => $this->faker->numberBetween(0, 1000),
             'note_moyenne' => $this->faker->randomFloat(2, 0, 5),
+            'vues' => $this->faker->numberBetween(0, 10000),
+            'ordre' => $this->faker->numberBetween(0, 10),
         ];
     }
 }
