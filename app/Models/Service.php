@@ -36,4 +36,11 @@ class Service extends Model
     {
         return $this->hasMany(ServiceFichier::class)->orderBy('ordre');
     }
+    /**
+     * Relation : un service possede un fichier principale
+     */
+    public function fichierPrincipale()
+    {
+        return $this->hasOne(ServiceFichier::class)->where('est_principale', true);
+    }
 }
