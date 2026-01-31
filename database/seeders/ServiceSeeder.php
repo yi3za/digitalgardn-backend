@@ -16,10 +16,10 @@ class ServiceSeeder extends Seeder
     {
         $freelances = User::where('role', 'freelance')->get();
         foreach ($freelances as $freelance) {
-            $count = rand(1, 5);
+            $count = rand(1, 20);
             $services = Service::factory($count)->create(['user_id' => $freelance->id]);
             foreach ($services as $service) {
-                $categoriesIds = Categorie::inRandomOrder()->take(rand(1, 3))->pluck('id')->toArray();
+                $categoriesIds = Categorie::inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
                 $service->categories()->attach($categoriesIds);
             }
         }

@@ -18,11 +18,10 @@ class ServiceFichierFactory extends Factory
     public function definition(): array
     {
         return [
-            'service_id' => Service::factory(),
             'chemin' => $this->faker->imageUrl(600, 400),
             'type' => $this->faker->randomElement(['image', 'video']),
             'ordre' => $this->faker->numberBetween(0, 5),
-            'est_principale' => $this->faker->boolean(20),
+            'est_principale' => false,
         ];
     }
 }

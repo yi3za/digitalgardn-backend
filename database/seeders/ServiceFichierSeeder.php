@@ -15,7 +15,8 @@ class ServiceFichierSeeder extends Seeder
     {
         $services = Service::all();
         foreach ($services as $service) {
-            $count = rand(1, 4);
+            $count = rand(1, 10);
+            ServiceFichier::factory()->create(['service_id' => $service->id, 'est_principale' => true]);
             ServiceFichier::factory($count)->create(['service_id' => $service->id]);
         }
     }

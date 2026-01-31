@@ -46,8 +46,8 @@ class CategorieController extends Controller
     {
         // Recupere un categorie active par son slug
         $categorie = Categorie::where(['slug' => $slug, 'est_active' => true])->firstOrFail();
-        // Recupere tous les services actifs de cette categorie, tries par ordre
-        $services = $categorie->services()->where('statut', 'publie')->orderBy('ordre')->get();
+        // Recupere tous les services publies de cette categorie
+        $services = $categorie->services()->where('statut', 'publie')->get();
         // Retourne les services au format JSON avec le code HTTP 200
         return response()->json(['services' => $services], 200);
     }

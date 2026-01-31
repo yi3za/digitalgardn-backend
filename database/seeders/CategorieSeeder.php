@@ -12,8 +12,8 @@ class CategorieSeeder extends Seeder
      */
     public function run(): void
     {
-        $parents = Categorie::factory(5)->create();
-        for ($i = 0; $i < 10; $i++) {
+        $parents = Categorie::factory(10)->create();
+        for ($i = 0; $i < 30; $i++) {
             $parent = $parents->random();
             Categorie::factory()->create(['parent_id' => $parent->id]);
         }
