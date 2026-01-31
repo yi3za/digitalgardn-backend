@@ -4,8 +4,9 @@
 # Routes du catalogue
 #-------------------------
 
-use App\Http\Controllers\Catalog\public\CategorieController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Catalog\public\CategorieController;
+use App\Http\Controllers\Catalog\public\ServiceController;
 
 /**
  * Routes publiques pour les categories
@@ -19,4 +20,16 @@ Route::prefix('categories')
         Route::get('{slug}', 'show');
         // Liste tous les services d'une categorie
         Route::get('{slug}/services', 'servicesParCategorie');
+    });
+
+/**
+ *  Routes publiques pour les services
+ */
+Route::prefix('services')
+    ->controller(ServiceController::class)
+    ->group(function () {
+        // Liste tous les services
+        Route::get('', 'index');
+        // Affiche un service specifique
+        Route::get('{slug}', 'show');
     });
