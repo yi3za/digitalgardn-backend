@@ -19,7 +19,7 @@ class ServiceSeeder extends Seeder
             $count = rand(1, 20);
             $services = Service::factory($count)->create(['user_id' => $freelance->id]);
             foreach ($services as $service) {
-                $categoriesIds = Categorie::inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
+                $categoriesIds = Categorie::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
                 $service->categories()->attach($categoriesIds);
             }
         }
