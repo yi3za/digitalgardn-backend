@@ -23,7 +23,14 @@ Route::middleware(['auth:sanctum', 'activity'])->group(function () {
     Route::prefix('me')->group(function () {
         // Inclusion des routes de gestion du compte utilisateur connecte
         require __DIR__ . '/account.php';
-        // Inclusion des routes de gestion du profil utilisateur freelance connecte
-        require __DIR__ . '/freelance/profil/profil.php';
+        /**
+         * Routes reservees aux freelances uniquement
+         */
+        Route::middleware('role:freelance')->group(function () {
+            // Inclusion des routes de gestion du profil
+            require __DIR__ . '/freelance/profil/profil.php';
+            // Inclusion des routes de gestion des services
+            require __DIR__ . '/freelance/catalog/catalog.php';
+        });
     });
 });
