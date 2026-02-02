@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
 
 /**
- * Routes de gestion du compte utilisateur connecte (/me)
+ * Routes de gestion du compte utilisateur connecte
  */
 Route::controller(AccountController::class)
-    ->prefix('me')
     ->group(function () {
         // Recupere les informations du compte utilisateur connecte
         Route::get('', 'show');

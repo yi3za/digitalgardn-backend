@@ -17,8 +17,13 @@ require __DIR__ . '/catalog/public/catalog.php';
  * - activity : Mettre a jour la derniere activite de l'utilisateur
  */
 Route::middleware(['auth:sanctum', 'activity'])->group(function () {
-    // Inclusion des routes de gestion du compte utilisateur connecte
-    require __DIR__ . '/account.php';
-    // Inclusion des routes de gestion du profil utilisateur connecte
-    require __DIR__ . '/profil.php';
+    /**
+     * Routes liees a l'utilisateur connecte (/me)
+     */
+    Route::prefix('me')->group(function () {
+        // Inclusion des routes de gestion du compte utilisateur connecte
+        require __DIR__ . '/account.php';
+        // Inclusion des routes de gestion du profil utilisateur freelance connecte
+        require __DIR__ . '/profil.php';
+    });
 });
