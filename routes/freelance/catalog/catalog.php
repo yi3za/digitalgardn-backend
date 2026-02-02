@@ -17,4 +17,6 @@ Route::controller(ServiceController::class)
         Route::get('', 'index');
         // Creation d'un service
         Route::post('', 'store');
+        // Affiche un service specifique
+        Route::get('{slug}','show');
     });
