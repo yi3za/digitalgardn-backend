@@ -1,12 +1,12 @@
 <?php
 
-#-------------------------
-# Routes du catalogue
-#-------------------------
+#---------------------------------
+# Routes du catalogue publiques
+#---------------------------------
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Catalog\public\CategorieController;
-use App\Http\Controllers\Catalog\public\ServiceController;
+use App\Http\Controllers\Public\Catalog\CategorieController;
+use App\Http\Controllers\Public\Catalog\ServiceController;
 
 /**
  * Routes publiques pour les categories

@@ -5,7 +5,7 @@
 #------------------------------
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Profil\ProfilController;
+use App\Http\Controllers\Freelance\Profil\ProfilController;
 
 /**
  * Routes pour le profil de l'utilisateur connecte (/profil)

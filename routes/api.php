@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 // Inclusion des routes d'authentification
 require __DIR__ . '/auth.php';
 // Inclusion des routes publiques des catalogues
-require __DIR__ . '/catalog/public/catalog.php';
+require __DIR__ . '/public/catalog/catalog.php';
 
 /**
  * Routes protegees par :
@@ -24,6 +24,6 @@ Route::middleware(['auth:sanctum', 'activity'])->group(function () {
         // Inclusion des routes de gestion du compte utilisateur connecte
         require __DIR__ . '/account.php';
         // Inclusion des routes de gestion du profil utilisateur freelance connecte
-        require __DIR__ . '/profil.php';
+        require __DIR__ . '/freelance/profil/profil.php';
     });
 });

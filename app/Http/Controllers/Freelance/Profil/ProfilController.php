@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Profil;
+namespace App\Http\Controllers\Freelance\Profil;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Profil\UpdateRequest;
+use App\Http\Requests\Freelance\Profil\UpdateRequest;
 use Illuminate\Http\Request;
 
 /**

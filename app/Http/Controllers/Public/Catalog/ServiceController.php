@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Catalog\public;
+namespace App\Http\Controllers\Public\Catalog;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
