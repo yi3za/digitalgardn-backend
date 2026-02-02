@@ -18,5 +18,5 @@ Route::middleware('role:freelance')
         // Recupere les informations du profil
         Route::get('', 'show');
         // Modifie les informations du profil
-        Route::put('', 'update');
+        Route::patch('', 'update');
     });

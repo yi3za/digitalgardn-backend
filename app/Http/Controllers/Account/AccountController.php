@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\StatusRequest;
 use App\Http\Requests\Account\UpdateRequest;
 use App\Http\Requests\Auth\Password\ChangePasswordRequest;
 use Illuminate\Http\Request;
@@ -66,20 +65,6 @@ class AccountController extends Controller
         ]);
         // Retourne une reponse JSON indiquant que l'operation a reussi avec code 200
         return response()->json([], 200);
-    }
-    /**
-     * Mettre a jour le statut du compte utilisateur
-     */
-    public function updateStatus(StatusRequest $request)
-    {
-        // Recupere l'utilisateur actuellement authentifie
-        $user = $request->user();
-        // Recupere le statut valide
-        $status = $request->validated()['status'];
-        // Mettre a jour le statut
-        $user->update(['status' => $status]);
-        // Retourne une reponse JSON indiquant que l'operation a reussi avec code 200
-        return response()->json(['user' => $user], 200);
     }
     /**
      * Supprime le compte de l'utilisateur connecte
