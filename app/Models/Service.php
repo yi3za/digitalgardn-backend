@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Model : Service
@@ -42,5 +43,24 @@ class Service extends Model
     public function fichierPrincipale()
     {
         return $this->hasOne(ServiceFichier::class)->where('est_principale', true);
+    }
+    /**
+     * Evenement execute automatiquement avant la creation d'un service
+     * Permet de generer un slug unique
+     */
+    protected static function booted()
+    {
+        static::creating(function ($service) {
+            // Initialiser le compteur pour eviter les doublons
+            $counter = 1;
+            // Generer un slug a partir du titre
+            $service->slug = Str::slug($service->titre);
+            // Tant que le slug existe deja, ajouter un suffixe
+            while (static::where('slug', $service->slug)->exists()) {
+                $service->slug = Str::slug($service->titre) . '-' . $counter++;
+            }
+            // Remplir automatiquement le champ user_id avec l'utilisateur authentifie
+            $service->user_id = auth('sanctum')->id();
+        });
     }
 }

@@ -15,4 +15,6 @@ Route::controller(ServiceController::class)
     ->group(function () {
         // Liste tous les services
         Route::get('', 'index');
+        // Creation d'un service
+        Route::post('', 'store');
     });
