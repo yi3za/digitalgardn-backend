@@ -27,15 +27,19 @@ class CategorieController extends Controller
      */
     public function show($slug)
     {
-        // Recupere un categorie specifique active par son slug
-        $categorie = Categorie::where(['slug' => $slug, 'est_active' => true])
+        // Recupere une categorie specifique active par son slug
+        $categorie = Categorie::where(['slug' => $slug, 'parent_id' => null, 'est_active' => true])
             // Charge egalement ses enfants actifs, tries par ordre
             ->with([
                 'enfants' => function ($query) {
                     $query->orderBy('ordre')->where('est_active', true);
                 },
             ])
-            ->firstOrFail();
+            ->first();
+        // Si la categorie n'existe pas, retourne une erreur HTTP 404
+        if (!$categorie) {
+            return response()->json([], 404);
+        }
         // Retourne la categorie avec ses enfants au format JSON avec code HTTP 200
         return response()->json(['categorie' => $categorie], 200);
     }
@@ -45,9 +49,13 @@ class CategorieController extends Controller
     public function servicesParCategorie($slug)
     {
         // Recupere un categorie active par son slug
-        $categorie = Categorie::where(['slug' => $slug, 'est_active' => true])->firstOrFail();
-        // Recupere tous les services publies de cette categorie
-        $services = $categorie->services()->where('statut', 'publie')->get();
+        $categorie = Categorie::where(['slug' => $slug, 'est_active' => true])->first();
+        // Si la categorie n'existe pas, retourne une erreur HTTP 404
+        if (!$categorie) {
+            return response()->json([], 404);
+        }
+        // Recupere tous les services
+        $services = $categorie->servicesAvecDetails(['est_active' => true], ['statut' => 'publie'], ['status' => 'actif']);
         // Retourne les services au format JSON avec le code HTTP 200
         return response()->json(['services' => $services], 200);
     }
