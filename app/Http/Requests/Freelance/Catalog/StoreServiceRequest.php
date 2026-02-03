@@ -30,9 +30,6 @@ class StoreServiceRequest extends FormRequest
             'prix_base' => ['required', 'numeric', 'min:0'],
             'delai_livraison' => ['required', 'integer', 'min:1'],
             'revisions' => ['nullable', 'integer', 'min:0'],
-            'ventes' => ['nullable', 'integer', 'min:0'],
-            'note_moyenne' => ['nullable', 'numeric', 'min:0', 'max:5'],
-            'vues' => ['nullable', 'integer', 'min:0'],
         ];
     }
 }
