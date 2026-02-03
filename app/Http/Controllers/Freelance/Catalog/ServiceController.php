@@ -67,4 +67,18 @@ class ServiceController extends Controller
         // Retourner le service mis a jour
         return response()->json(['service' => $service], 200);
     }
+    /**
+     * Supprimer un service existant
+     */
+    public function destroy(Service $service, Request $request)
+    {
+        // Verifie si l'utilisateur connecte est le proprietaire du service
+        if ($request->user()->id !== $service->user_id) {
+            return response()->json([], 403);
+        }
+        // Supprime le service de la base de donnees
+        $service->delete();
+        // Retourne une response vide pour confirmer le suppression
+        return response()->noContent();
+    }
 }
