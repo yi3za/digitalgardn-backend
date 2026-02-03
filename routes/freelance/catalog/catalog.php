@@ -19,4 +19,6 @@ Route::controller(ServiceController::class)
         Route::post('', 'store');
         // Affiche un service specifique
         Route::get('{slug}','show');
+        // Mettre a jour les informations d'un service
+        Route::patch('{service}', 'update');
     });

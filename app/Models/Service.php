@@ -45,22 +45,45 @@ class Service extends Model
         return $this->hasOne(ServiceFichier::class)->where('est_principale', true);
     }
     /**
-     * Evenement execute automatiquement avant la creation d'un service
-     * Permet de generer un slug unique
+     * Private
+     * Function helper : generer un slug unique a partir du titre
+     */
+    private function generateSlugUnique($titre)
+    {
+        // Initialiser le compteur pour eviter les doublons
+        $counter = 1;
+        // Generer un slug a partir du titre
+        $slug = Str::slug($titre);
+        // Tant que le slug existe deja, ajouter un suffixe
+        while (static::where('slug', $slug)->exists()) {
+            $slug = Str::slug($titre) . '-' . $counter++;
+        }
+        // Retourner le slug
+        return $slug;
+    }
+    /**
+     * Evenements du modele Service
      */
     protected static function booted()
     {
+        /**
+         * Avant la creation : generer automatiquement le slug
+         */
         static::creating(function ($service) {
-            // Initialiser le compteur pour eviter les doublons
-            $counter = 1;
-            // Generer un slug a partir du titre
-            $service->slug = Str::slug($service->titre);
-            // Tant que le slug existe deja, ajouter un suffixe
-            while (static::where('slug', $service->slug)->exists()) {
-                $service->slug = Str::slug($service->titre) . '-' . $counter++;
-            }
+            // Generer un slug unique a partir du titre
+            $service->slug = $service->generateSlugUnique($service->titre);
             // Remplir automatiquement le champ user_id avec l'utilisateur authentifie
             $service->user_id = auth('sanctum')->id();
+        });
+        /**
+         * Avant la mise a jour :
+         * - regenerer le slug uniquement si le titre change
+         * - le service est encore en brouillon
+         */
+        static::updating(function ($service) {
+            if ($service->isDirty('titre') && $service->statut === 'brouillon') {
+                $service->slug = $service->generateSlugUnique($service->titre);
+            }
         });
     }
 }
