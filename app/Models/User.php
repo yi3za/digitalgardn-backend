@@ -57,11 +57,13 @@ class User extends Authenticatable
         return $this->hasMany(Service::class);
     }
     /**
-     * Evenement declenche apres la creation d'un utilisateur
-     * Si l'utilisateur est un freelance, cree automatiquement un profil vide
+     * Evenements du modele Service
      */
     protected static function booted()
     {
+        /**
+         * Apres la creation : si l'utilisateur est un freelance, cree automatiquement un profil vide
+         */
         static::created(function ($user) {
             if ($user->role === 'freelance') {
                 $user->profil()->create();
