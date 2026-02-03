@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Freelance\Catalog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
-use App\Http\Requests\Freelance\Catalog\ServiceRequest;
+use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
+use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
 
 /**
  * Gerer les services du freelance connecte
@@ -27,7 +28,7 @@ class ServiceController extends Controller
     /**
      * Creation d'un service par le freelance
      */
-    public function store(ServiceRequest $request)
+    public function store(StoreServiceRequest $request)
     {
         // Recuperer les donnees validees
         $data = $request->validated();
@@ -52,6 +53,18 @@ class ServiceController extends Controller
             return response()->json([], 404);
         }
         // Sinon retourne le service
+        return response()->json(['service' => $service], 200);
+    }
+    /**
+     * Mettre a jour les informations d'un service
+     */
+    public function update(Service $service, UpdateServiceRequest $request)
+    {
+        // Recuperer les donnees validees
+        $data = $request->validated();
+        // Mettre a jour le service avec les donnees fournies
+        $service->update($data);
+        // Retourner le service mis a jour
         return response()->json(['service' => $service], 200);
     }
 }
