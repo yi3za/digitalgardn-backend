@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
+use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
 use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
 
 /**
@@ -80,5 +81,17 @@ class ServiceController extends Controller
         $service->delete();
         // Retourne une response vide pour confirmer le suppression
         return response()->noContent();
+    }
+    /**
+     * Gestion des categories de services
+     */
+    public function syncCategories(Service $service, SyncCategoriesRequest $request)
+    {
+        // Recupere les IDs des categories validees
+        $categoriesIds = $request->validated('categories');
+        // Supprime les anciennes relations et ajoute les nouvelles
+        $service->categories()->sync($categoriesIds);
+        // Retourne une response succes
+        return response()->json([], 200);
     }
 }

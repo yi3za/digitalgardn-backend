@@ -23,4 +23,8 @@ Route::controller(ServiceController::class)
         Route::patch('{service}', 'update');
         // Supprimer un service existant
         Route::delete('{service}','destroy');
+        /**
+         * Gestion des categories de services
+         */
+        Route::put('{service}/categories','syncCategories');
     });
