@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->string('chemin');
-            $table->enum('type', ['image', 'video']);
+            $table->string('type')->default('image');
             $table->unsignedInteger('ordre')->default(0);
             $table->boolean('est_principale')->default(false);
             $table->timestamps();
