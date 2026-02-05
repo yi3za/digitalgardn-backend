@@ -27,4 +27,8 @@ Route::controller(ServiceController::class)
          * Gestion des categories de services
          */
         Route::put('{service}/categories','syncCategories');
+        /**
+         * Gestion des fichiers de services
+         */
+        Route::post('{service}/fichiers', 'ajouterFichiers');
     });

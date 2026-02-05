@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
 use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
 use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
+use App\Http\Requests\Freelance\Catalog\AjouterFichiersRequest;
 
 /**
  * Gerer les services du freelance connecte
@@ -91,6 +92,38 @@ class ServiceController extends Controller
         $categoriesIds = $request->validated('categories');
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->categories()->sync($categoriesIds);
+        // Retourne une response succes
+        return response()->json([], 200);
+    }
+    /**
+     * Gestion des fichiers de services
+     */
+    public function ajouterFichiers(Service $service, AjouterFichiersRequest $request)
+    {
+        // Nettoyer les fichiers existants
+        $fichiersExists = $service->fichiers;
+        // Parcourir chaque fichier
+        foreach ($fichiersExists as $fichier) {
+            // Supprimer le fichier
+            $fichier->delete();
+        }
+        // Recupere les fichiers valides
+        $fichiers = $request->validated('fichiers');
+        // Preparer les donnees a inserer
+        $data = [];
+        // Parcourir chaque fichier
+        foreach ($fichiers as $index => $fichier) {
+            // Stocke le fichier et recupere le chemin
+            $chemin = $fichier->store('services/images', 'public');
+            // Ajouter les informations de chaque fichier
+            $data[] = [
+                'chemin' => $chemin,
+                'ordre' => $index,
+                'est_principale' => $index === 0,
+            ];
+        }
+        // Cree plusieures enregistrements d'un coup
+        $service->fichiers()->createMany($data);
         // Retourne une response succes
         return response()->json([], 200);
     }

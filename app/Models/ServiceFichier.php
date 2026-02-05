@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Model : ServiceFichier
@@ -21,5 +22,18 @@ class ServiceFichier extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+    /**
+     * Evenements du modele ServiceFichier
+     */
+    protected static function booted()
+    {
+        /**
+         * Avant la suppression : supprime le fichier du storage
+         */
+        static::deleting(function ($fichier) {
+            // Supprime le fichier stocke
+            Storage::disk('public')->delete($fichier->chemin);
+        });
     }
 }
