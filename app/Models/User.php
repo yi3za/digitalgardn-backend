@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $this->hasMany(Service::class);
     }
     /**
-     * Evenements du modele Service
+     * Evenements du modele User
      */
     protected static function booted()
     {
