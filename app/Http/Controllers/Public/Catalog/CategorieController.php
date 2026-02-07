@@ -25,33 +25,26 @@ class CategorieController extends Controller
     /**
      * Affiche une categorie specifique
      */
-    public function show($slug)
+    public function show(Categorie $categorie)
     {
-        // Recupere une categorie specifique active par son slug
-        $categorie = Categorie::where(['slug' => $slug, 'parent_id' => null, 'est_active' => true])
-            // Charge egalement ses enfants actifs, tries par ordre
-            ->with([
-                'enfants' => function ($query) {
-                    $query->orderBy('ordre')->where('est_active', true);
-                },
-            ])
-            ->first();
-        // Si la categorie n'existe pas, retourne une erreur HTTP 404
-        if (!$categorie) {
+        // Si la categorie n'est pas active ou a un parent, retourne 404
+        if (!$categorie->est_active || $categorie->parent_id !== null) {
             return response()->json([], 404);
         }
+        // Charge egalement les enfants actifs, tries par ordre
+        $categorie->load([
+            'enfants' => fn($q) => $q->orderBy('ordre')->where('est_active', true),
+        ]);
         // Retourne la categorie avec ses enfants au format JSON avec code HTTP 200
         return response()->json(['categorie' => $categorie], 200);
     }
     /**
      * Liste tous les services d'une categorie
      */
-    public function servicesParCategorie($slug)
+    public function servicesParCategorie(Categorie $categorie)
     {
-        // Recupere un categorie active par son slug
-        $categorie = Categorie::where(['slug' => $slug, 'est_active' => true])->first();
-        // Si la categorie n'existe pas, retourne une erreur HTTP 404
-        if (!$categorie) {
+        // Si la categorie n'est pas active, retourne 404
+        if (!$categorie->est_active) {
             return response()->json([], 404);
         }
         // Recupere tous les services

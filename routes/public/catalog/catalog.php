@@ -17,9 +17,9 @@ Route::prefix('categories')
         // Liste tous les categories
         Route::get('', 'index');
         // Affiche une categorie specifique
-        Route::get('{slug}', 'show');
+        Route::get('{categorie:slug}', 'show');
         // Liste tous les services d'une categorie
-        Route::get('{slug}/services', 'servicesParCategorie');
+        Route::get('{categorie:slug}/services', 'servicesParCategorie');
     });
 
 /**
