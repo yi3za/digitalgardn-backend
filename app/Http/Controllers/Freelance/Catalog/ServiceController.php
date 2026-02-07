@@ -98,7 +98,7 @@ class ServiceController extends Controller
     /**
      * Gestion des fichiers de services
      */
-    public function ajouterFichiers(Service $service, AjouterFichiersRequest $request)
+    public function syncFichiers(Service $service, AjouterFichiersRequest $request)
     {
         // Nettoyer les fichiers existants
         $fichiersExists = $service->fichiers;

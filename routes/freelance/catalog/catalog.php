@@ -30,5 +30,5 @@ Route::controller(ServiceController::class)
         /**
          * Gestion des fichiers de services
          */
-        Route::post('{service}/fichiers', 'ajouterFichiers');
+        Route::put('{service}/fichiers', 'syncFichiers');
     });
