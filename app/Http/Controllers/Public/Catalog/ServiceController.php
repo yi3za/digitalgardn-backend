@@ -32,30 +32,19 @@ class ServiceController extends Controller
     /**
      * Affiche un service specifique
      */
-    public function show($slug)
+    public function show(Service $service)
     {
+        // Si le service n'est pas publie ou l'utilisateur n'est pas actif, retourne 404
+        if ($service->statut !== 'publie' || $service->user->status !== 'actif') {
+            return response()->json([], 404);
+        }
         /**
          * Recupere un service specifique publie avec :
          * - leur utilisateur actif
          * - tous ses fichiers
-         * - toutes ses categories (enfants avec leur parent)
+         * - toutes ses categories (enfants avec leur parent), tous actifs
          */
-        $service = Service::with([
-            'user',
-            'fichiers',
-            'categories' => function ($query) {
-                $query->with('parent');
-            },
-        ])
-            ->where(['slug' => $slug, 'statut' => 'publie'])
-            ->whereHas('user', function ($query) {
-                $query->where('status', 'actif');
-            })
-            ->first();
-        // Si le service n'existe pas, retourne une erreur HTTP 404
-        if (!$service) {
-            return response()->json([], 404);
-        }
+        $service->load(['user', 'fichiers', 'categories' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true)]);
         // Retourne le service au format JSON avec le code HTTP 200
         return response()->json(['service' => $service], 200);
     }

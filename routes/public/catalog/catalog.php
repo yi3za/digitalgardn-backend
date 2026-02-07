@@ -31,5 +31,5 @@ Route::prefix('services')
         // Liste tous les services
         Route::get('', 'index');
         // Affiche un service specifique
-        Route::get('{slug}', 'show');
+        Route::get('{service:slug}', 'show');
     });
