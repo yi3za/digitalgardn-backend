@@ -18,7 +18,7 @@ Route::controller(ServiceController::class)
         // Creation d'un service
         Route::post('', 'store');
         // Affiche un service specifique
-        Route::get('{slug}','show');
+        Route::get('{service:slug}','show');
         // Mettre a jour les informations d'un service
         Route::patch('{service}', 'update');
         // Supprimer un service existant

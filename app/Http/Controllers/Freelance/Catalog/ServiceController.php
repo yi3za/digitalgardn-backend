@@ -42,19 +42,17 @@ class ServiceController extends Controller
     /**
      * Affiche un service specifique
      */
-    public function show(Request $request, $slug)
+    public function show(Request $request, Service $service)
     {
         // Recupere l'utilisateur authentifie
         $user = $request->user();
-        // Cherche le service correspondant a l'utilisateur connecte
-        $service = Service::with(['fichiers', 'categories' => fn($q) => $q->where('est_active', true)])
-            ->where(['user_id' => $user->id, 'slug' => $slug])
-            ->first();
-        // Si le service n'existe pas, retourne une erreur HTTP 404
-        if (!$service) {
+        // Verifie que le service appartient a l'utilisateur
+        if ($service->user_id !== $user->id) {
             return response()->json([], 404);
         }
-        // Sinon retourne le service
+        // Charger les relations
+        $service->load(['fichiers', 'categories' => fn($q) => $q->where('est_active', true)]);
+        // Retourne le service
         return response()->json(['service' => $service], 200);
     }
     /**
