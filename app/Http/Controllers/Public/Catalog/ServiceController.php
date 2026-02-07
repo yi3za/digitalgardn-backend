@@ -20,12 +20,7 @@ class ServiceController extends Controller
          * - leur utilisateur actif
          * - leur fichier principale
          */
-        $services = Service::with('user', 'fichierPrincipale')
-            ->where('statut', 'publie')
-            ->whereHas('user', function ($query) {
-                $query->where('status', 'actif');
-            })
-            ->get();
+        $services = Service::with('user', 'fichierPrincipale')->where('statut', 'publie')->whereHas('user', fn($q) => $q->where('status', 'actif'))->get();
         // Retourne la liste au format JSON avec le code HTTP 200
         return response()->json(['services' => $services], 200);
     }
