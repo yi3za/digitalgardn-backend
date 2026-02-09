@@ -43,6 +43,20 @@ Backend de l'application Digitalgardn, une plateforme de mise en relation entre 
     - Regroupement logique des routes par controleur pour une meilleure lisibilite.
     - Normalisation des donnees d'entree (ex: email en minuscules) directement dans les Form Requests.
 
+- ✅ **Catalogue public (API pour les visiteurs)**
+    - Affichage de la liste de toutes les categories principales.
+    - Affichage d'une categorie principale avec la liste de ses sous-categories.
+    - Affichage de la liste de tous les services publies et actifs.
+    - Affichage des details d'un service specifique.
+    - Logique avancee pour lister tous les services d'une categorie (si categorie parente, agrege les services de toutes ses sous-categories).
+
+- ✅ **Gestion des services (pour les freelances)**
+    - CRUD complet pour la gestion des services par leur proprietaire (Creer, Lire, Mettre a jour, Supprimer).
+    - Generation automatique d'un `slug` unique lors de la creation ou de la mise a jour d'un service.
+    - Le statut par defaut des nouveaux services est automatiquement defini sur "brouillon".
+    - Synchronisation des categories associees a un service.
+    - Gestion complete de la galerie d'images d'un service (remplacement, definition de l'image principale, suppression automatique des fichiers physiques).
+
 ---
 
 ## Installation et Lancement
