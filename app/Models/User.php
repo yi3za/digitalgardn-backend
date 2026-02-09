@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasImageUrl;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasImageUrl;
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +29,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'avatar'];
     /**
      * Get the attributes that should be cast.
      *
@@ -69,5 +70,18 @@ class User extends Authenticatable
                 $user->profil()->create();
             }
         });
+    }
+    /**
+     * Ajoute automatiquement l'attribut 'avatar_url' au JSON du modele
+     *
+     * Remarque : chaque nom inscrit dans $appends doit avoir un accessor correspondant
+     * Exemple : 'test' dans $appends necessite la methode 'getTestAttribute()'
+     */
+    protected $appends = ['avatar_url'];
+    // Accessor pour recuperer l'URL complete de l'avatar
+    public function getAvatarUrlAttribute()
+    {
+        // Utilise la methode getImageUrl du Trait  pour generer l'URL complete
+        return $this->getImageUrl('avatar', 'avatars/default.webp');
     }
 }
