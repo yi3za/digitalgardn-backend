@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Competence extends Model
 {
+    // Permet d'utiliser les factories pour ce modele
+    use HasFactory;
     // Champs pouvant etre remplis en masse
     protected $fillable = ['parent_id', 'nom', 'slug', 'description', 'icone', 'ordre', 'est_active'];
     /**
