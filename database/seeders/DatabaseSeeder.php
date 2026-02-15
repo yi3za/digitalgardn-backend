@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             CategorieSeeder::class,
             ServiceSeeder::class,
             ServiceFichierSeeder::class,
+            CompetenceSeeder::class,
         ]);
     }
 }
