@@ -29,4 +29,18 @@ class Competence extends Model
     {
         return $this->hasMany(Competence::class, 'parent_id');
     }
+    /**
+     * Relation : une competence appartient a plusieurs services
+     */
+    public function services()
+    {
+        return $this->belongsToMany(Service::class);
+    }
+    /**
+     * Relation : une competence appartient a plusieurs utilisateurs
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
