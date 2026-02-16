@@ -58,6 +58,13 @@ class User extends Authenticatable
         return $this->hasMany(Service::class);
     }
     /**
+     * Relation : un utilisateur appartient a plusieurs competences
+     */
+    public function competences()
+    {
+        return $this->belongsToMany(Competence::class)->orderBy('ordre');
+    }
+    /**
      * Evenements du modele User
      */
     protected static function booted()

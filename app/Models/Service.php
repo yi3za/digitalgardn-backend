@@ -31,6 +31,13 @@ class Service extends Model
         return $this->belongsToMany(Categorie::class)->orderBy('ordre');
     }
     /**
+     * Relation : un service appartient a plusieurs competences
+     */
+    public function competences()
+    {
+        return $this->belongsToMany(Competence::class)->orderBy('ordre');
+    }
+    /**
      * Relation : un service possede plusieurs fichiers
      */
     public function fichiers()
