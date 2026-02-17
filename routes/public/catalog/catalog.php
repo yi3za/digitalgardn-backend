@@ -6,6 +6,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Public\Catalog\CategorieController;
+use App\Http\Controllers\Public\Catalog\CompetenceController;
 use App\Http\Controllers\Public\Catalog\ServiceController;
 
 /**
@@ -32,4 +33,18 @@ Route::prefix('services')
         Route::get('', 'index');
         // Affiche un service specifique
         Route::get('{service:slug}', 'show');
+    });
+
+/**
+ * Routes publiques pour les competences
+ */
+Route::prefix('competences')
+    ->controller(CompetenceController::class)
+    ->group(function () {
+        // Liste tous les competences
+        Route::get('', 'index');
+        // Affiche une competence specifique
+        Route::get('{competence:slug}', 'show');
+        // Liste tous les services d'une competence
+        Route::get('{competence:slug}/services', 'servicesParCompetence');
     });
