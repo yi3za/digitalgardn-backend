@@ -38,4 +38,18 @@ class CompetenceController extends Controller
         // Retourne la competence avec ses enfants au format JSON avec code HTTP 200
         return response()->json(['competence' => $competence], 200);
     }
+    /**
+     * Liste tous les services d'une competence
+     */
+    public function servicesParCompetence(Competence $competence)
+    {
+        // Si la competence n'est pas active, retourne 404
+        if (!$competence->est_active) {
+            return response()->json([], 404);
+        }
+        // Recupere tous les services
+        $services = $competence->servicesAvecDetails(['est_active' => true], ['statut' => 'publie'], ['status' => 'actif']);
+        // Retourne les services au format JSON avec le code HTTP 200
+        return response()->json(['services' => $services], 200);
+    }
 }
