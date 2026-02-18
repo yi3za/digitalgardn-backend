@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -12,8 +13,9 @@ use Illuminate\Support\Str;
  */
 class Service extends Model
 {
-    // Permet d'utiliser les factories pour ce modele
-    use HasFactory;
+    // HasFactory: Permet d'utiliser les factories pour ce modele
+    // HasSlug: Generer automatiquement un slug unique
+    use HasFactory, HasSlug;
     // Champs pouvant etre remplis en masse
     protected $fillable = ['user_id', 'titre', 'slug', 'description', 'prix_base', 'delai_livraison', 'revisions', 'statut', 'ventes', 'note_moyenne'];
     /**
@@ -50,23 +52,6 @@ class Service extends Model
     public function fichierPrincipale()
     {
         return $this->hasOne(ServiceFichier::class)->where('est_principale', true);
-    }
-    /**
-     * Private
-     * Function helper : generer un slug unique a partir du titre
-     */
-    private function generateSlugUnique($titre)
-    {
-        // Initialiser le compteur pour eviter les doublons
-        $counter = 1;
-        // Generer un slug a partir du titre
-        $slug = Str::slug($titre);
-        // Tant que le slug existe deja, ajouter un suffixe
-        while (static::where('slug', $slug)->exists()) {
-            $slug = Str::slug($titre) . '-' . $counter++;
-        }
-        // Retourner le slug
-        return $slug;
     }
     /**
      * Evenements du modele Service
