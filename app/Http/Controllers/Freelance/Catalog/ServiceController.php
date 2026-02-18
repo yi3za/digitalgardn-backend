@@ -9,6 +9,7 @@ use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
 use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
 use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
 use App\Http\Requests\Freelance\Catalog\AjouterFichiersRequest;
+use App\Http\Requests\Freelance\Catalog\syncCompetencesRequest;
 
 /**
  * Gerer les services du freelance connecte
@@ -90,6 +91,18 @@ class ServiceController extends Controller
         $categoriesIds = $request->validated('categories');
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->categories()->sync($categoriesIds);
+        // Retourne une response succes
+        return response()->json([], 200);
+    }
+    /**
+     * Gestion des competences de services
+     */
+    public function syncCompetences(Service $service, syncCompetencesRequest $request)
+    {
+        // Recupere les IDs des competences validees
+        $competencesIds = $request->validated('competences');
+        // Supprime les anciennes relations et ajoute les nouvelles
+        $service->competences()->sync($competencesIds);
         // Retourne une response succes
         return response()->json([], 200);
     }
