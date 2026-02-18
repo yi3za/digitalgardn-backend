@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProfilSeeder::class,
             CategorieSeeder::class,
+            CompetenceSeeder::class,
             ServiceSeeder::class,
             ServiceFichierSeeder::class,
-            CompetenceSeeder::class,
         ]);
     }
 }

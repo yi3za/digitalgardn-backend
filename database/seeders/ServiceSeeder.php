@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Categorie;
+use App\Models\Competence;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -20,7 +21,9 @@ class ServiceSeeder extends Seeder
             $services = Service::factory($count)->create(['user_id' => $freelance->id]);
             foreach ($services as $service) {
                 $categoriesIds = Categorie::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
+                $competencesIds = Competence::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
                 $service->categories()->attach($categoriesIds);
+                $service->competences()->attach($competencesIds);
             }
         }
     }
