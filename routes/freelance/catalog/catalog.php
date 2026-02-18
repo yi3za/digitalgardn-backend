@@ -28,6 +28,10 @@ Route::controller(ServiceController::class)
          */
         Route::put('{service}/categories','syncCategories');
         /**
+         * Gestion des competences de services
+         */
+        Route::put('{service}/competences', 'syncCompetences');
+        /**
          * Gestion des fichiers de services
          */
         Route::put('{service}/fichiers', 'syncFichiers');
