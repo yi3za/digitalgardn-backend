@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Requete pour gestion des fichiers de services
  */
-class AjouterFichiersRequest extends FormRequest
+class SyncFichiersRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

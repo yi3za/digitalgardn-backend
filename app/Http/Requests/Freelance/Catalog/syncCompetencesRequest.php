@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Requete pour gestion des competences de services
  */
-class syncCompetencesRequest extends FormRequest
+class SyncCompetencesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

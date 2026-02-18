@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
-use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
 use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
-use App\Http\Requests\Freelance\Catalog\AjouterFichiersRequest;
-use App\Http\Requests\Freelance\Catalog\syncCompetencesRequest;
+use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
+use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
+use App\Http\Requests\Freelance\Catalog\SyncFichiersRequest;
 
 /**
  * Gerer les services du freelance connecte
@@ -97,7 +97,7 @@ class ServiceController extends Controller
     /**
      * Gestion des competences de services
      */
-    public function syncCompetences(Service $service, syncCompetencesRequest $request)
+    public function syncCompetences(Service $service, SyncCompetencesRequest $request)
     {
         // Recupere les IDs des competences validees
         $competencesIds = $request->validated('competences');
@@ -109,7 +109,7 @@ class ServiceController extends Controller
     /**
      * Gestion des fichiers de services
      */
-    public function syncFichiers(Service $service, AjouterFichiersRequest $request)
+    public function syncFichiers(Service $service, SyncFichiersRequest $request)
     {
         // Nettoyer les fichiers existants
         $fichiersExists = $service->fichiers;
