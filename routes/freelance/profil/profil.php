@@ -17,4 +17,8 @@ Route::controller(ProfilController::class)
         Route::get('', 'show');
         // Modifie les informations du profil
         Route::patch('', 'update');
+        /**
+         * Gestion des competences de services
+         */
+        Route::put('competences', 'syncCompetences');
     });

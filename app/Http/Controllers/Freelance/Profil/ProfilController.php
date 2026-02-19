@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Freelance\Profil;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Requests\Freelance\Profil\UpdateRequest;
 use Illuminate\Http\Request;
 
@@ -41,5 +42,19 @@ class ProfilController extends Controller
         $user->profil()->update($data);
         // Retourne statut 200 avec le profil mis a jour
         return response()->json(['profil' => $user->profil], 200);
+    }
+    /**
+     * Gestion des competences de l'utilisateur connecte
+     */
+    public function syncCompetences(SyncCompetencesRequest $request)
+    {
+        // Recupere l'utilisateur qui est connecte
+        $user = $request->user();
+        // Recupere les IDs des competences validees
+        $competencesIds = $request->validated('competences');
+        // Supprime les anciennes relations et ajoute les nouvelles
+        $user->competences()->sync($competencesIds);
+        // Retourne une response succes
+        return response()->json([], 200);
     }
 }
