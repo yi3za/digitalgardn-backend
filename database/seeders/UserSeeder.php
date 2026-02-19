@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Competence;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,10 @@ class UserSeeder extends Seeder
             'role' => 'freelance',
             'password' => 'yaazayaaza',
         ]);
-        User::factory(20)->create();
+        $users = User::factory(20)->create();
+        foreach ($users as $user) {
+            $competencesIds = Competence::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
+            $user->competences()->attach($competencesIds);
+        }
     }
 }
