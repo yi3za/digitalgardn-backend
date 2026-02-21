@@ -16,12 +16,12 @@ class RoleMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         // Recupere l'utilisateur authentifie
         $user = $request->user();
         // Verifie si l'utilisateur n'existe pas ou si son role est incorrect
-        if (!$user || $user->role !== $role) {
+        if (!$user || !in_array($user->role, $roles)) {
             // Bloque l'acces avec une reponse "Interdit" (403)
             return response()->json([], 403);
         }
