@@ -31,14 +31,16 @@ Backend de l'application Digitalgardn, une plateforme de mise en relation entre 
 - ✅ **Gestion du profil (pour les freelances)**
     - Creation automatique d'un profil vide a l'inscription.
     - Recuperation et mise a jour complete du profil (titre, ...).
+    - Synchronisation des competences pour le profil d'un freelance.
     - Protection des routes du profil pour qu'elles soient accessibles uniquement aux freelances.
 
 - ✅ **Securite et autorisations**
     - Authentification via Laravel Sanctum (API stateful).
-    - Middleware de gestion des roles (`role:freelance`, ...) pour un controle d'acces precis.
+    - Middleware de gestion des roles flexible, capable de gerer un ou plusieurs roles (ex: `role:freelance`, `role:admin,...`).
     - Validation robuste de toutes les donnees entrantes via des Form Requests dedies.
 
 - ✅ **Qualite du code et organisation**
+    - Utilisation de Traits reutilisables (`HasSlug`, `HasImageUrl`, ...) pour une logique partagee et un code plus propre.
     - Code source propre, commente et bien organise.
     - Regroupement logique des routes par controleur pour une meilleure lisibilite.
     - Normalisation des donnees d'entree (ex: email en minuscules) directement dans les Form Requests.
@@ -49,13 +51,18 @@ Backend de l'application Digitalgardn, une plateforme de mise en relation entre 
     - Affichage de la liste de tous les services publies et actifs.
     - Affichage des details d'un service specifique.
     - Logique avancee pour lister tous les services d'une categorie (si categorie parente, agrege les services de toutes ses sous-categories).
+    - API publique pour lister les competences, afficher leurs details et les services associes.
 
 - ✅ **Gestion des services (pour les freelances)**
     - CRUD complet pour la gestion des services par leur proprietaire (Creer, Lire, Mettre a jour, Supprimer).
     - Generation automatique d'un `slug` unique lors de la creation ou de la mise a jour d'un service.
     - Le statut par defaut des nouveaux services est automatiquement defini sur "brouillon".
-    - Synchronisation des categories associees a un service.
+    - Synchronisation des categories et des competences associees a un service.
     - Gestion complete de la galerie d'images d'un service (remplacement, definition de l'image principale, suppression automatique des fichiers physiques).
+
+- ✅ **Gestion des competences**
+    - Structure de competences hierarchique (parent/enfant).
+    - Modele, factory et seeder pour une gestion complete des competences.
 
 ---
 
@@ -72,5 +79,6 @@ composer install
 copy .env.example .env
 php artisan key:generate
 php artisan migrate
+php artisan storage:link
 php artisan serve
 ```
