@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\Auth\ActivityMiddleware;
+use App\Http\Middleware\Auth\ApiGuestMiddleware;
 use App\Http\Middleware\Auth\RoleMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -18,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
         // Enregistrer les alias de middleware personnalises
         $middleware->alias([
+            // Bloque l'acces si l'utilisateur est deja authentifie
+            'isGuest' => ApiGuestMiddleware::class,
             // Mettre a jour la derniere activite de l'utilisateur
             'activity' => ActivityMiddleware::class,
             // Verifier le role de l'utilisateur authentifie
@@ -26,4 +29,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

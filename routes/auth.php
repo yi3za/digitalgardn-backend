@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
     /**
      * Ce groupe est reserve aux utilisateurs **non authentifies** (guests)
      */
-    Route::middleware('guest')->group(function () {
+    Route::middleware('isGuest:sanctum')->group(function () {
         // Enregistrement d'un nouvel utilisateur
         Route::post('register', [RegisterController::class, 'register']);
         // Gere connexion d'un utilisateur existant
