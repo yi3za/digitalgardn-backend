@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware\Auth;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +25,7 @@ class RoleMiddleware
         // Verifie si l'utilisateur n'existe pas ou si son role est incorrect
         if (!$user || !in_array($user->role, $roles)) {
             // Bloque l'acces avec une reponse "Interdit" (403)
-            return response()->json([], 403);
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
         // Passe la requete
         return $next($request);

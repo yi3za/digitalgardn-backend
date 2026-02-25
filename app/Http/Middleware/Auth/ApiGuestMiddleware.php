@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware\Auth;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +23,7 @@ class ApiGuestMiddleware
         // Verifie si l'utilisateur est connecte via le guard specifie
         if (auth($gruad)->check()) {
             // Retourne 403 Forbidden si l'utilisateur est authentifie
-            return response()->json([], 403);
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
         // Passe la requete
         return $next($request);
