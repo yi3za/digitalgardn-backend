@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\UpdateRequest;
 use App\Http\Requests\Auth\Password\ChangePasswordRequest;
@@ -19,12 +21,7 @@ class AccountController extends Controller
      */
     public function show(Request $request)
     {
-        return response()->json(
-            [
-                'user' => $request->user(),
-            ],
-            200,
-        );
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $request->user()]);
     }
     /**
      * Modifie les informations de l'utilisateur connecte
@@ -43,7 +40,7 @@ class AccountController extends Controller
         // Modifie les informations envoyees
         $user->update($data);
         // Retourne statut 200 avec l'utilisateur mis a jour
-        return response()->json(['user' => $user], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
     }
     /**
      * Change le mot de passe de l'utilisateur
@@ -57,14 +54,14 @@ class AccountController extends Controller
         // Verifie que l'ancien mot de passe fourni correspond au mot de passe actuel de l'utilisateur
         if (!Hash::check($data['old_password'], $user->password)) {
             // Si le mot de passe ancien est incorrect, retourne une reponse JSON avec code 422
-            return response()->json([], 422);
+            return ApiResponse::send(ApiCodes::VALIDATION_ERROR, 422);
         }
         // Mettre a jour le mot de passe de l'utilisateur
         $user->update([
             'password' => $data['new_password'],
         ]);
         // Retourne une reponse JSON indiquant que l'operation a reussi avec code 200
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Supprime le compte de l'utilisateur connecte
@@ -76,7 +73,7 @@ class AccountController extends Controller
         // Supprime le compte de l'utilisateur
         $user->delete();
         // Retourne une response vide (204 Not Content)
-        return response()->noContent();
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Deconnexion d'un utilisateur
@@ -88,7 +85,7 @@ class AccountController extends Controller
             // Deconnecte l'utilisateur (session web)
             Auth::guard('web')->logout();
             // Retourne une response vide (204 Not Content)
-            return response()->noContent();
+            return ApiResponse::send(ApiCodes::SUCCESS, 200);
         }
         // Sinon renvoyer 401 Unauthorized
     }

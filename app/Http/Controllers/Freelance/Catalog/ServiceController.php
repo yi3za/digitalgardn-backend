@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Freelance\Catalog;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
@@ -26,7 +28,7 @@ class ServiceController extends Controller
         // Recupere tous ses services avec leur fichier principale
         $services = Service::with('fichierPrincipale')->where('user_id', $user->id)->orderByDesc('updated_at')->get();
         // Retourner la liste
-        return response()->json(['services' => $services], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => $services]);
     }
     /**
      * Creation d'un service par le freelance
@@ -38,7 +40,7 @@ class ServiceController extends Controller
         // Creer un nouveau service
         $service = Service::create($data);
         // Retourner la service cree
-        return response()->json(['service' => $service], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
     }
     /**
      * Affiche un service specifique
@@ -49,12 +51,12 @@ class ServiceController extends Controller
         $user = $request->user();
         // Verifie que le service appartient a l'utilisateur
         if ($service->user_id !== $user->id) {
-            return response()->json([], 404);
+            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         // Charger les relations
         $service->load(['fichiers', 'categories' => fn($q) => $q->where('est_active', true)]);
         // Retourne le service
-        return response()->json(['service' => $service], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
     }
     /**
      * Mettre a jour les informations d'un service
@@ -66,7 +68,7 @@ class ServiceController extends Controller
         // Mettre a jour le service avec les donnees fournies
         $service->update($data);
         // Retourner le service mis a jour
-        return response()->json(['service' => $service], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
     }
     /**
      * Supprimer un service existant
@@ -75,12 +77,12 @@ class ServiceController extends Controller
     {
         // Verifie si l'utilisateur connecte est le proprietaire du service
         if ($request->user()->id !== $service->user_id) {
-            return response()->json([], 403);
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
         // Supprime le service de la base de donnees
         $service->delete();
         // Retourne une response vide pour confirmer le suppression
-        return response()->noContent();
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Gestion des categories de services
@@ -92,7 +94,7 @@ class ServiceController extends Controller
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->categories()->sync($categoriesIds);
         // Retourne une response succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Gestion des competences de services
@@ -104,7 +106,7 @@ class ServiceController extends Controller
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->competences()->sync($competencesIds);
         // Retourne une response succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Gestion des fichiers de services
@@ -136,6 +138,6 @@ class ServiceController extends Controller
         // Cree plusieures enregistrements d'un coup
         $service->fichiers()->createMany($data);
         // Retourne une response succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
 }

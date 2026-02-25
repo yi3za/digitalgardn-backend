@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Public\Catalog;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 
@@ -22,7 +24,7 @@ class ServiceController extends Controller
          */
         $services = Service::with('user', 'fichierPrincipale')->where('statut', 'publie')->whereHas('user', fn($q) => $q->where('status', 'actif'))->get();
         // Retourne la liste au format JSON avec le code HTTP 200
-        return response()->json(['services' => $services], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => $services]);
     }
     /**
      * Affiche un service specifique
@@ -31,7 +33,7 @@ class ServiceController extends Controller
     {
         // Si le service n'est pas publie ou l'utilisateur n'est pas actif, retourne 404
         if ($service->statut !== 'publie' || $service->user->status !== 'actif') {
-            return response()->json([], 404);
+            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         /**
          * Recupere un service specifique publie avec :
@@ -41,6 +43,6 @@ class ServiceController extends Controller
          */
         $service->load(['user', 'fichiers', 'categories' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true)]);
         // Retourne le service au format JSON avec le code HTTP 200
-        return response()->json(['service' => $service], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
     }
 }

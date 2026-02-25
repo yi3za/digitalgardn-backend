@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Freelance\Profil;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Requests\Freelance\Profil\UpdateRequest;
@@ -17,12 +19,8 @@ class ProfilController extends Controller
      */
     public function show(Request $request)
     {
-        return response()->json(
-            [
-                'profil' => $request->user()->profil,
-            ],
-            200,
-        );
+        $user = $request->user();
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['profil' => $user->profil]);
     }
     /**
      * Modifie les informations du profil de l'utilisateur connecte
@@ -41,7 +39,7 @@ class ProfilController extends Controller
         // Modifie les informations envoyees
         $user->profil()->update($data);
         // Retourne statut 200 avec le profil mis a jour
-        return response()->json(['profil' => $user->profil], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['profil' => $user->profil]);
     }
     /**
      * Gestion des competences de l'utilisateur connecte
@@ -55,6 +53,6 @@ class ProfilController extends Controller
         // Supprime les anciennes relations et ajoute les nouvelles
         $user->competences()->sync($competencesIds);
         // Retourne une response succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
 }

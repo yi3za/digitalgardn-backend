@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Auth;
@@ -21,15 +23,9 @@ class LoginController extends Controller
         // Tentative d'authentification
         if (!Auth::attempt($data)) {
             // Echec d'authentification
-            return response()->json([], 401);
+            return ApiResponse::send(ApiCodes::INVALID_CREDENTIALS, 401);
         }
         // Authentification reussie
-        return response()->json(
-            [
-                // Retourne l'utilisateur authentifie
-                'user' => Auth::user(),
-            ],
-            200,
-        );
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => Auth::user()]);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
@@ -24,11 +26,6 @@ class RegisterController extends Controller
         // Authentification automatique
         Auth::login($user);
         // Retourne l'utilisateur authentifie avec le statut HTTP 201 (cree)
-        return response()->json(
-            [
-                'user' => Auth::user(),
-            ],
-            201,
-        );
+        return ApiResponse::send(ApiCodes::SUCCESS, 201, ['user' => Auth::user()]);
     }
 }

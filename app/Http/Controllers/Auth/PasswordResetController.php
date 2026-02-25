@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ApiCodes;
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\Password\ResetRequest;
 use App\Http\Requests\Auth\Password\SendRequest;
@@ -28,7 +30,7 @@ class PasswordResetController extends Controller
         $user = User::where('email', $email)->first();
         // Si l'utilisateur n'existe pas, retourner code HTTP 404 Not Found
         if (!$user) {
-            return response()->json([], 404);
+            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         // Sinon, creer un code de verification
         $code_verification = (string) rand(111111, 999999);
@@ -43,7 +45,7 @@ class PasswordResetController extends Controller
         // Envoyer le mail avec le code de reinitialisation
         Mail::to($email)->send(new ResetPasswordCodeMail($code_verification));
         // Retourne une reponse du succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
      * Reinitialise le mot de passe de l'utilisateur en utilisant le code de verification
@@ -59,7 +61,7 @@ class PasswordResetController extends Controller
         // Verification de validite de code
         if (!$exists || $exists->created_at->addMinutes(10)->isPast()) {
             // Echec : Retourne un code HTTP 422 lorsque les donnees ne sont pas valides
-            return response()->json([], 422);
+            return ApiResponse::send(ApiCodes::VALIDATION_ERROR, 422);
         }
         // Succes : mise a jour de mot de passe de l'utilisateur
         $user = User::where('email', $email)->first();
@@ -69,6 +71,6 @@ class PasswordResetController extends Controller
         // Supprimer le code pour de raisons de securite
         $exists->delete();
         // Retourne une reponse du succes
-        return response()->json([], 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
 }
