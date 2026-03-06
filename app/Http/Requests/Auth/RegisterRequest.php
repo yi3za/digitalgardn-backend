@@ -29,7 +29,6 @@ class RegisterRequest extends AuthNormalizationRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:freelance,client'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
         ];
     }
 }
