@@ -72,7 +72,7 @@ class AccountController extends Controller
         $user = $request->user();
         // Supprime le compte de l'utilisateur
         $user->delete();
-        // Retourne une response vide (204 Not Content)
+        // Retourne une reponse succes
         return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
@@ -84,7 +84,7 @@ class AccountController extends Controller
         if (Auth::check()) {
             // Deconnecte l'utilisateur (session web)
             Auth::guard('web')->logout();
-            // Retourne une response vide (204 Not Content)
+            // Retourne une reponse succes
             return ApiResponse::send(ApiCodes::SUCCESS, 200);
         }
         // Sinon renvoyer 401 Unauthorized
