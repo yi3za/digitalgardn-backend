@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth\Password;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Requete pour reinitialiser le mot de passe de l'utilisateur en utilisant le code de verification envoye par e-mail
@@ -26,7 +27,7 @@ class ResetRequest extends FormRequest
     {
         return [
             'email' => ['required', 'string', 'email', 'max:255', 'exists:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-            'code' => ['required', 'string', 'size:6'],
+            'code' => ['required', 'string', 'size:6', Rule::exists('password_reset_tokens', 'token')->where(fn($query) => $query->where('email', $this->email)->where('created_at', '>=', now()->subMinutes(2)))],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

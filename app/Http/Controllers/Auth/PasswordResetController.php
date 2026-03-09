@@ -50,20 +50,13 @@ class PasswordResetController extends Controller
         $email = $request->input('email');
         $code = $request->input('code');
         $password = $request->input('password');
-        // Verification de l'existance
-        $exists = PasswordReset::where(['email' => $email, 'token' => $code])->first();
-        // Verification de validite de code
-        if (!$exists || $exists->created_at->addMinutes(10)->isPast()) {
-            // Echec : Retourne un code HTTP 422 lorsque les donnees ne sont pas valides
-            return ApiResponse::send(ApiCodes::VALIDATION_ERROR, 422);
-        }
         // Succes : mise a jour de mot de passe de l'utilisateur
         $user = User::where('email', $email)->first();
         $user->update([
             'password' => $password,
         ]);
         // Supprimer le code pour de raisons de securite
-        $exists->delete();
+        PasswordReset::where(['email' => $email, 'token' => $code])->delete();
         // Retourne une reponse du succes
         return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
