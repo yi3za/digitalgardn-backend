@@ -26,13 +26,7 @@ class PasswordResetController extends Controller
     {
         // Recuperation de l'email de l'utilisateur
         $email = $request->validated()['email'];
-        // Chercher l'utilisateur par email
-        $user = User::where('email', $email)->first();
-        // Si l'utilisateur n'existe pas, retourner code HTTP 404 Not Found
-        if (!$user) {
-            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
-        }
-        // Sinon, creer un code de verification
+        // Creer un code de verification
         $code_verification = (string) rand(111111, 999999);
         // Enregistrer ou mettre a jour le code dans la table password_reset_tokens
         PasswordReset::updateOrCreate(
