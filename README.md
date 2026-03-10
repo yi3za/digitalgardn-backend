@@ -6,63 +6,39 @@ Backend de l'application Digitalgardn, une plateforme de mise en relation entre 
 
 ## Technologies utilisees
 
-- **PHP 8.2+**
-- **Laravel 12**
-- **MySQL**
-- **Laravel Sanctum (API authentication via cookies)**
+| Categorie               | Technologie / Librairie |
+| ----------------------- | ----------------------- |
+| **Framework & Langage** | Laravel, PHP            |
+| **Base de donnees**     | MySQL                   |
+| **Authentification**    | Laravel Sanctum         |
 
 ---
 
-## Fonctionnalites implementees
+## Fonctionnalites Implementees
 
-- ✅ **Systeme d'authentification complet**
-    - Inscription, Connexion et Deconnexion securisees.
-    - Processus complet de reinitialisation de mot de passe par email.
-    - Protection des routes d'inscription/connexion pour les utilisateurs non connectes (middleware `guest`).
+- ✅ **API Standardisee et Robuste**
+    - Reponses API coherentes et gestionnaire d'exceptions global.
+    - Utilisation de codes d'API personnalises pour la communication avec le frontend.
 
-- ✅ **Gestion du compte utilisateur**
-    - Recuperation des informations de l'utilisateur connecte (`/api/me`).
-    - Mise a jour des informations du compte (email, ...).
-    - Changement de mot de passe securise.
-    - Mise a jour du statut du compte.
-    - Suppression du compte utilisateur.
-    - Suivi automatique de la derniere activite de l'utilisateur.
+- ✅ **Systeme d'Authentification Complet et Securise**
+    - Inscription, connexion, deconnexion et reinitialisation de mot de passe.
+    - Protection des routes via des middlewares (auth, guest, role).
 
-- ✅ **Gestion du profil (pour les freelances)**
-    - Creation automatique d'un profil vide a l'inscription.
-    - Recuperation et mise a jour complete du profil (titre, ...).
-    - Synchronisation des competences pour le profil d'un freelance.
-    - Protection des routes du profil pour qu'elles soient accessibles uniquement aux freelances.
+- ✅ **Validation Avancee et Gestion des Roles**
+    - Validation robuste des donnees via des Form Requests dedies.
+    - Middleware de gestion des roles flexible pour proteger les ressources.
 
-- ✅ **Securite et autorisations**
-    - Authentification via Laravel Sanctum (API stateful).
-    - Middleware de gestion des roles flexible, capable de gerer un ou plusieurs roles (ex: `role:freelance`, `role:admin,...`).
-    - Validation robuste de toutes les donnees entrantes via des Form Requests dedies.
+- ✅ **Gestion des Comptes et Profils**
+    - CRUD complet pour les comptes utilisateurs et les profils freelances.
+    - Synchronisation des competences pour les profils.
 
-- ✅ **Qualite du code et organisation**
-    - Utilisation de Traits reutilisables (`HasSlug`, `HasImageUrl`, ...) pour une logique partagee et un code plus propre.
-    - Code source propre, commente et bien organise.
-    - Regroupement logique des routes par controleur pour une meilleure lisibilite.
-    - Normalisation des donnees d'entree (ex: email en minuscules) directement dans les Form Requests.
+- ✅ **Gestion des Services et Catalogue Public**
+    - CRUD complet pour les services geres par les freelances.
+    - API publique pour l'affichage des categories, services et competences.
 
-- ✅ **Catalogue public (API pour les visiteurs)**
-    - Affichage de la liste de toutes les categories principales.
-    - Affichage d'une categorie principale avec la liste de ses sous-categories.
-    - Affichage de la liste de tous les services publies et actifs.
-    - Affichage des details d'un service specifique.
-    - Logique avancee pour lister tous les services d'une categorie (si categorie parente, agrege les services de toutes ses sous-categories).
-    - API publique pour lister les competences, afficher leurs details et les services associes.
-
-- ✅ **Gestion des services (pour les freelances)**
-    - CRUD complet pour la gestion des services par leur proprietaire (Creer, Lire, Mettre a jour, Supprimer).
-    - Generation automatique d'un `slug` unique lors de la creation ou de la mise a jour d'un service.
-    - Le statut par defaut des nouveaux services est automatiquement defini sur "brouillon".
-    - Synchronisation des categories et des competences associees a un service.
-    - Gestion complete de la galerie d'images d'un service (remplacement, definition de l'image principale, suppression automatique des fichiers physiques).
-
-- ✅ **Gestion des competences**
-    - Structure de competences hierarchique (parent/enfant).
-    - Modele, factory et seeder pour une gestion complete des competences.
+- ✅ **Qualite du Code et Organisation**
+    - Utilisation de Traits PHP pour un code propre et reutilisable.
+    - Structure de projet claire et code source commente.
 
 ---
 
