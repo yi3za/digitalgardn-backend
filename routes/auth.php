@@ -21,14 +21,14 @@ Route::prefix('auth')->group(function () {
         Route::post('register', [RegisterController::class, 'register']);
         // Gere connexion d'un utilisateur existant
         Route::post('login', [LoginController::class, 'login']);
-    });
-    /**
-     * Routes de reinitialisation du mot de passe de l'utilisateur
-     */
-    Route::controller(PasswordResetController::class)->group(function () {
-        // Envoie un code de verification pour reinitialiser le mot de passe
-        Route::post('forget-password', 'sendCode');
-        // Reinitialise le mot de passe avec le code fourni
-        Route::post('reset-password', 'resetPassword');
+        /**
+         * Routes de reinitialisation du mot de passe de l'utilisateur
+         */
+        Route::controller(PasswordResetController::class)->group(function () {
+            // Envoie un code de verification pour reinitialiser le mot de passe
+            Route::post('forget-password', 'sendCode');
+            // Reinitialise le mot de passe avec le code fourni
+            Route::post('reset-password', 'resetPassword');
+        });
     });
 });
