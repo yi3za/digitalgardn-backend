@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->enum('statut', ['brouillon', 'publie', 'en_pause', 'en_attente_approbation', 'rejete'])->default('brouillon');
             $table->unsignedInteger('ventes')->default(0);
             $table->decimal('note_moyenne', 3, 2)->default(0.00);
-            $table->unsignedBigInteger('vues')->default(0);
             $table->timestamps();
         });
     }

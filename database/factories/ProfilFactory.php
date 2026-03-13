@@ -19,7 +19,6 @@ class ProfilFactory extends Factory
         return [
             'titre' => $this->faker->jobTitle(),
             'biographie' => $this->faker->paragraphs(2, true),
-            'image_couverture' => $this->faker->imageUrl(600, 200),
             'site_web' => $this->faker->url(),
             'liens_sociaux' => json_encode([
                 'facebook' => $this->faker->url(),

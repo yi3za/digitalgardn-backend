@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('titre')->nullable();
             $table->text('biographie')->nullable();
-            $table->string('image_couverture')->nullable();
             $table->string('site_web')->nullable();
             $table->json('liens_sociaux')->nullable();
             $table->timestamps();

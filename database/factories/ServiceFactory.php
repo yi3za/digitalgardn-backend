@@ -30,7 +30,6 @@ class ServiceFactory extends Factory
             'statut' => $this->faker->randomElement(['brouillon', 'publie', 'en_pause', 'en_attente_approbation', 'rejete']),
             'ventes' => $this->faker->numberBetween(0, 1000),
             'note_moyenne' => $this->faker->randomFloat(2, 0, 5),
-            'vues' => $this->faker->numberBetween(0, 10000),
         ];
     }
 }
