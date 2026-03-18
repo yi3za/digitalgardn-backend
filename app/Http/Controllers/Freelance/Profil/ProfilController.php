@@ -31,11 +31,6 @@ class ProfilController extends Controller
         $user = $request->user();
         // Recupere les donnees validees
         $data = $request->validated();
-        // Verifie si une image de couverture a ete envoyee
-        if ($request->hasFile('image_couverture')) {
-            // Stocke l'image de couverture envoyee dans le dossier 'images_couvertures' du disque 'public'
-            $data['image_couverture'] = $request->file('image_couverture')->store('images_couvertures', 'public');
-        }
         // Modifie les informations envoyees
         $user->profil()->update($data);
         // Retourne statut 200 avec le profil mis a jour

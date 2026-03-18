@@ -27,7 +27,6 @@ class UpdateRequest extends FormRequest
         return [
             'titre' => ['sometimes', 'nullable', 'string', 'max:255'],
             'biographie' => ['sometimes', 'nullable', 'string'],
-            'image_couverture' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:4096'],
             'site_web' => ['sometimes', 'nullable', 'url', 'max:255'],
             'liens_sociaux' => ['sometimes', 'nullable', 'json'],
         ];
