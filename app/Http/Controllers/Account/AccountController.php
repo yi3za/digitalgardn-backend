@@ -6,10 +6,12 @@ use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\ChangePasswordRequest;
-use App\Http\Requests\Account\UpdateRequest;
+use App\Http\Requests\Account\UpdateInfoRequest;
+use App\Http\Requests\Account\UploadAvatarRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Gestion des actions liees au compte de l utilisateur connecte
@@ -26,19 +28,33 @@ class AccountController extends Controller
     /**
      * Modifie les informations de l'utilisateur connecte
      */
-    public function update(UpdateRequest $request)
+    public function updateInfo(UpdateInfoRequest $request)
     {
         // Recupere l'utilisateur qui est connecte
         $user = $request->user();
         // Recupere les donnees validees
         $data = $request->validated();
-        // Verifie si un avatar a ete envoye
-        if ($request->hasFile('avatar')) {
-            // Stocke l'avatar envoye dans le dossier 'avatars' sur le disque 'public'
-            $data['avatar'] = $request->file('avatar')->store('avatars', 'public');
-        }
         // Modifie les informations envoyees
         $user->update($data);
+        // Retourne statut 200 avec l'utilisateur mis a jour
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+    }
+    /**
+     * Televerser l'avatar de l'utilisateur
+     */
+    public function uploadAvatar(UploadAvatarRequest $request)
+    {
+        // Recupere l'utilisateur connecte
+        $user = $request->user();
+        // Supprimer l'ancien avatar s'il existe
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+        // Mettre a jour l'avatar si present
+        $user->update([
+            // Stocke l'avatar envoye dans le dossier 'avatars' sur le disque 'public' s'il existe
+            'avatar' => $request->hasFile('avatar') ? $request->file('avatar')->store('avatars', 'public') : null,
+        ]);
         // Retourne statut 200 avec l'utilisateur mis a jour
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
     }

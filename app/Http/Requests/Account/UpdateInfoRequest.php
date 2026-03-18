@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\AuthNormalizationRequest;
  * Requete pour le mise a jour des informations utilisateur
  * Herite de AuthNormalizationRequest pour normaliser username et email avant validation
  */
-class UpdateRequest extends AuthNormalizationRequest
+class UpdateInfoRequest extends AuthNormalizationRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,6 @@ class UpdateRequest extends AuthNormalizationRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'username' => ['sometimes', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:users,username,' . $this->user()->id],
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id, 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-            'avatar' => ['sometimes', 'nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'status' => ['sometimes', 'required', 'in:actif,inactif'],
         ];
     }
