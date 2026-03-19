@@ -17,4 +17,5 @@ class ApiCodes
     const SERVER_ERROR = 'SERVER_ERROR';
     const METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED';
     const TOO_MANY_REQUESTS = 'TOO_MANY_REQUESTS';
+    const BAD_REQUEST = 'BAD_REQUEST';
 }
