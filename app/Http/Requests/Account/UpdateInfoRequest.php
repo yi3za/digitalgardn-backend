@@ -28,7 +28,6 @@ class UpdateInfoRequest extends AuthNormalizationRequest
             'name' => ['sometimes', 'string', 'max:255'],
             'username' => ['sometimes', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:users,username,' . $this->user()->id],
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id, 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-            'status' => ['sometimes', 'required', 'in:actif,inactif'],
         ];
     }
 }

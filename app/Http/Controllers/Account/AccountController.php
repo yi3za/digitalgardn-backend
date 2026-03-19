@@ -80,6 +80,48 @@ class AccountController extends Controller
         return ApiResponse::send(ApiCodes::SUCCESS, 200);
     }
     /**
+     * Active le compte de l'utilisateur authentifie s'il est inactif
+     */
+    public function activateAccount(Request $request)
+    {
+        // Recupere l'utilisateur
+        $user = $request->user();
+        // Verifie si le compte est banni
+        if ($user->status === 'banni') {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Verifie si le compte est inactif
+        if ($user->status === 'inactif') {
+            // Activer le compte
+            $user->update(['status' => 'actif']);
+            // Retourne une reponse succes
+            return ApiResponse::send(ApiCodes::SUCCESS, 200);
+        }
+        // Retourne une reponse erreur (compte deja actif)
+        return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
+    }
+    /**
+     * Desactive le compte de l'utilisateur authentifie s'il est actif
+     */
+    public function deactivateAccount(Request $request)
+    {
+        // Recupere l'utilisateur
+        $user = $request->user();
+        // Verifie si le compte est banni
+        if ($user->status === 'banni') {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Verifie si le compte est actif
+        if ($user->status === 'actif') {
+            // Desactiver le compte
+            $user->update(['status' => 'inactif']);
+            // Retourne une reponse succes
+            return ApiResponse::send(ApiCodes::SUCCESS, 200);
+        }
+        // Retourne une reponse erreur (compte deja inactif)
+        return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
+    }
+    /**
      * Supprime le compte de l'utilisateur connecte
      */
     public function destroy(Request $request)

@@ -20,6 +20,10 @@ Route::controller(AccountController::class)
         Route::post('upload-avatar', 'uploadAvatar');
         // Change le mot de passe du compte utilisateur connecte
         Route::post('change-password', 'changePassword');
+        // Active le compte utilisateur s'il est inactif
+        Route::patch('activate-account', 'activateAccount');
+        // Desactive le compte utilisateur s'il est actif
+        Route::patch('deactivate-account', 'deactivateAccount');
         // Supprime le compte utilisateur connecte
         Route::delete('', 'destroy');
         // Deconnecte l'utilisateur
