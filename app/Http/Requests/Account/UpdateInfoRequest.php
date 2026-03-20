@@ -25,9 +25,9 @@ class UpdateInfoRequest extends AuthNormalizationRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
-            'username' => ['sometimes', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:users,username,' . $this->user()->id],
-            'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id, 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'username' => ['sometimes', 'required', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:users,username,' . $this->user()->id],
+            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->user()->id, 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
         ];
     }
 }
