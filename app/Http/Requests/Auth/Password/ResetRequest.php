@@ -28,7 +28,7 @@ class ResetRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email', 'max:255', 'exists:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'code' => ['required', 'string', 'size:6', Rule::exists('password_reset_tokens', 'token')->where(fn($query) => $query->where('email', $this->email)->where('created_at', '>=', now()->subMinutes(2)))],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'max:72', 'confirmed'],
         ];
     }
 }
