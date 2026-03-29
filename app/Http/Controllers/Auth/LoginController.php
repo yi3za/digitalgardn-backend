@@ -20,8 +20,12 @@ class LoginController extends Controller
     {
         // Donnees validees
         $data = $request->validated();
+        // Recuperer la valeur du champ 'remember' pour la session persistante
+        $remember = $data['remember'];
+        // Supprimer le champ 'remember' des donnees d'authentification
+        unset($data['remember']);
         // Tentative d'authentification
-        if (!Auth::attempt($data)) {
+        if (!Auth::attempt($data, $remember)) {
             // Echec d'authentification
             return ApiResponse::send(ApiCodes::INVALID_CREDENTIALS, 401);
         }

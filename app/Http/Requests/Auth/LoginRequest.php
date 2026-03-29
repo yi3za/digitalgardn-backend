@@ -26,6 +26,7 @@ class LoginRequest extends AuthNormalizationRequest
         return [
             'email' => ['required', 'string', 'email', 'max:255', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'password' => ['required', 'string', 'min:8', 'max:72'],
+            'remember' => ['present', 'boolean'],
         ];
     }
 }

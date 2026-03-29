@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->enum('status', ['actif', 'inactif', 'banni'])->default('actif');
             $table->string('avatar')->nullable();
             $table->dateTime('derniere_activite')->nullable();
+            $table->rememberToken();
             // $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });

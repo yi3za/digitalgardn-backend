@@ -21,10 +21,14 @@ class RegisterController extends Controller
     {
         // Donnees validees
         $data = $request->validated();
+        // Recuperer la valeur du champ 'remember' pour la session persistante
+        $remember = $data['remember'];
+        // Supprimer le champ 'remember' des donnees d'authentification
+        unset($data['remember']);
         // Creation d'un nouvel utilisateur
         $user = User::create($data);
         // Authentification automatique
-        Auth::login($user);
+        Auth::login($user, $remember);
         // Retourne l'utilisateur authentifie avec le statut HTTP 201 (cree)
         return ApiResponse::send(ApiCodes::SUCCESS, 201, ['user' => Auth::user()]);
     }
