@@ -90,7 +90,7 @@ class AccountController extends Controller
             // Activer le compte
             $user->update(['status' => 'actif']);
             // Retourne une reponse succes
-            return ApiResponse::send(ApiCodes::SUCCESS, 200);
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
         }
         // Retourne une reponse erreur (compte deja actif)
         return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
@@ -111,7 +111,7 @@ class AccountController extends Controller
             // Desactiver le compte
             $user->update(['status' => 'inactif']);
             // Retourne une reponse succes
-            return ApiResponse::send(ApiCodes::SUCCESS, 200);
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
         }
         // Retourne une reponse erreur (compte deja inactif)
         return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
