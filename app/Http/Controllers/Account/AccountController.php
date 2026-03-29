@@ -67,11 +67,6 @@ class AccountController extends Controller
         $user = $request->user();
         // Valide et Recupere les donnees de formulaire (ancien et nouveau mot de passe)
         $data = $request->validated();
-        // Verifie que l'ancien mot de passe fourni correspond au mot de passe actuel de l'utilisateur
-        if (!Hash::check($data['old_password'], $user->password)) {
-            // Si le mot de passe ancien est incorrect, retourne une reponse JSON avec code 422
-            return ApiResponse::send(ApiCodes::VALIDATION_ERROR, 422);
-        }
         // Mettre a jour le mot de passe de l'utilisateur
         $user->update([
             'password' => $data['new_password'],
