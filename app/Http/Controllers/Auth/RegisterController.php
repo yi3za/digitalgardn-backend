@@ -29,6 +29,8 @@ class RegisterController extends Controller
         $user = User::create($data);
         // Authentification automatique
         Auth::login($user, $remember);
+        // Regeneration de la session
+        $request->session()->regenerate();
         // Retourne l'utilisateur authentifie avec le statut HTTP 201 (cree)
         return ApiResponse::send(ApiCodes::SUCCESS, 201, ['user' => Auth::user()]);
     }

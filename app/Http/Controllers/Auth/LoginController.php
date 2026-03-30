@@ -29,6 +29,8 @@ class LoginController extends Controller
             // Echec d'authentification
             return ApiResponse::send(ApiCodes::INVALID_CREDENTIALS, 401);
         }
+        // Regeneration de la session
+        $request->session()->regenerate();
         // Authentification reussie
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => Auth::user()]);
     }
