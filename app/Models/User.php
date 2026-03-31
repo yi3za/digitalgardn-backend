@@ -65,20 +65,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Competence::class)->orderBy('ordre');
     }
     /**
-     * Evenements du modele User
-     */
-    protected static function booted()
-    {
-        /**
-         * Apres la creation : si l'utilisateur est un freelance, cree automatiquement un profil vide
-         */
-        static::created(function ($user) {
-            if ($user->role === 'freelance') {
-                $user->profil()->create();
-            }
-        });
-    }
-    /**
      * Ajoute automatiquement l'attribut 'avatar_url' au JSON du modele
      *
      * Remarque : chaque nom inscrit dans $appends doit avoir un accessor correspondant
