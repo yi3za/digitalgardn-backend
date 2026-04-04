@@ -20,6 +20,8 @@ Route::controller(AccountController::class)
         Route::post('upload-avatar', 'uploadAvatar');
         // Change le mot de passe du compte utilisateur connecte
         Route::post('change-password', 'changePassword');
+        // Finalise l'onboarding de l'utilisateur
+        Route::patch('complete-onboarding', 'completeOnboarding');
         // Active le compte utilisateur s'il est inactif
         Route::patch('activate-account', 'activateAccount');
         // Desactive le compte utilisateur s'il est actif

@@ -10,7 +10,6 @@ use App\Http\Requests\Account\UpdateInfoRequest;
 use App\Http\Requests\Account\UploadAvatarRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -73,6 +72,18 @@ class AccountController extends Controller
         ]);
         // Retourne une reponse JSON indiquant que l'operation a reussi avec code 200
         return ApiResponse::send(ApiCodes::SUCCESS, 200);
+    }
+    /**
+     * Finalise l'onboarding de l'utilisateur
+     */
+    public function completeOnboarding(Request $request)
+    {
+        // Recupere l'utilisateur
+        $user = $request->user();
+        // Marquer l'onboarding comme termine
+        $user->update(['onboarding_termine' => true]);
+        // Retourner une reponse de succes
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
     }
     /**
      * Active le compte de l'utilisateur authentifie s'il est inactif
