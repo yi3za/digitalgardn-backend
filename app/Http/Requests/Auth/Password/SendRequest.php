@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests\Auth\Password;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Auth\AuthNormalizationRequest;
 
 /**
  * Requete pour l'envoi du code de reinitialisation du mot de passe a l'adresse e-mail de l'utilisateur
  */
-class SendRequest extends FormRequest
+class SendRequest extends AuthNormalizationRequest
 {
     /**
      * Determine if the user is authorized to make this request.

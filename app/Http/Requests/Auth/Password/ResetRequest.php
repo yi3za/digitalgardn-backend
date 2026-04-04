@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Auth\Password;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Auth\AuthNormalizationRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Requete pour reinitialiser le mot de passe de l'utilisateur en utilisant le code de verification envoye par e-mail
  */
-class ResetRequest extends FormRequest
+class ResetRequest extends AuthNormalizationRequest
 {
     /**
      * Determine if the user is authorized to make this request.
