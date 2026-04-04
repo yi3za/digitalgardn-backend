@@ -22,6 +22,8 @@ Route::controller(AccountController::class)
         Route::post('change-password', 'changePassword');
         // Finalise l'onboarding de l'utilisateur
         Route::patch('complete-onboarding', 'completeOnboarding');
+        // Change le role de l'utilisateur vers freelance s'il n'a pas fini l'onboarding
+        Route::patch('switch-to-freelance', 'switchToFreelance');
         // Active le compte utilisateur s'il est inactif
         Route::patch('activate-account', 'activateAccount');
         // Desactive le compte utilisateur s'il est actif

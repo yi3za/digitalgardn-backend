@@ -10,6 +10,7 @@ use App\Http\Requests\Account\UpdateInfoRequest;
 use App\Http\Requests\Account\UploadAvatarRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -84,6 +85,30 @@ class AccountController extends Controller
         $user->update(['onboarding_termine' => true]);
         // Retourner une reponse de succes
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+    }
+    /**
+     * Passer le role de l'utilisateur a freelance durant l'onboarding
+     */
+    public function switchToFreelance(Request $request)
+    {
+        // Recupere l'utilisateur
+        $user = $request->user();
+        // Verification : si l'onboarding est deja termine, on refuse le changement ici
+        // (pour securiser le fait que ce switch n'arrive que durant l'onboarding)
+        if ($user->onboarding_termine) {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Utilisation d'une transaction pour garantir l'integrite des donnees
+        return DB::transaction(function () use ($user) {
+            // Mise a jour du role
+            $user->update(['role' => 'freelance']);
+            // Cree le profil s'il n'existe pas, sinon recupere le profil actuel
+            $user->profil()->firstOrCreate([
+                'user_id' => $user->id
+            ]);
+            // Retourner l'utilisateur avec son profil charge
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user->load('profil')]);
+        });
     }
     /**
      * Active le compte de l'utilisateur authentifie s'il est inactif
