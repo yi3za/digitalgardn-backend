@@ -31,10 +31,6 @@ class RegisterController extends Controller
             unset($data['remember']);
             // Creation d'un nouvel utilisateur
             $user = User::create($data);
-            // Si l'utilisateur est un freelance, creer automatiquement son profil
-            if ($user->role === 'freelance') {
-                $user->profil()->create();
-            }
             // Authentification automatique
             Auth::login($user, $remember);
             // Actualiser les donnees de l'utilisateur

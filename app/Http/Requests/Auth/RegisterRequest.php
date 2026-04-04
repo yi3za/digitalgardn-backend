@@ -28,7 +28,6 @@ class RegisterRequest extends AuthNormalizationRequest
             'username' => ['required', 'string', 'alpha_dash', 'min:3', 'max:30', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email', 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'password' => ['required', 'string', 'min:8', 'max:72', 'confirmed'],
-            'role' => ['required', 'in:freelance,client'],
             'remember' => ['present', 'boolean'],
         ];
     }
