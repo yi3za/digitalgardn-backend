@@ -23,7 +23,14 @@ class AccountController extends Controller
      */
     public function show(Request $request)
     {
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $request->user()]);
+        // Recupere l'utilisateur connecte
+        $user = $request->user();
+        // Charge le profil de l'utilisateur
+        if ($user->role === 'freelance') {
+            $user->load('profil');
+        }
+        // Retourne les informations de l'utilisateur
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
     }
     /**
      * Modifie les informations de l'utilisateur connecte
@@ -104,7 +111,7 @@ class AccountController extends Controller
             $user->update(['role' => 'freelance']);
             // Cree le profil s'il n'existe pas, sinon recupere le profil actuel
             $user->profil()->firstOrCreate([
-                'user_id' => $user->id
+                'user_id' => $user->id,
             ]);
             // Retourner l'utilisateur avec son profil charge
             return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user->load('profil')]);
