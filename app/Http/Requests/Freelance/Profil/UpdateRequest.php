@@ -25,10 +25,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titre' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'biographie' => ['sometimes', 'nullable', 'string'],
+            'titre' => ['sometimes', 'required', 'min:10', 'string', 'max:255'],
+            'biographie' => ['sometimes', 'required', 'min:150', 'max:600', 'string'],
             'site_web' => ['sometimes', 'nullable', 'url', 'max:255'],
-            'liens_sociaux' => ['sometimes', 'nullable', 'json'],
         ];
     }
 }

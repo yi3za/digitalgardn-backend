@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('titre')->nullable();
             $table->text('biographie')->nullable();
             $table->string('site_web')->nullable();
-            $table->json('liens_sociaux')->nullable();
             $table->timestamps();
         });
     }

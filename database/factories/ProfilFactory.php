@@ -20,11 +20,6 @@ class ProfilFactory extends Factory
             'titre' => $this->faker->jobTitle(),
             'biographie' => $this->faker->paragraphs(2, true),
             'site_web' => $this->faker->url(),
-            'liens_sociaux' => json_encode([
-                'facebook' => $this->faker->url(),
-                'twitter' => $this->faker->url(),
-                'linkedin' => $this->faker->url(),
-            ]),
         ];
     }
 }
