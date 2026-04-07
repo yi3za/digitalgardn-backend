@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\ChangePasswordRequest;
 use App\Http\Requests\Account\UpdateInfoRequest;
 use App\Http\Requests\Account\UploadAvatarRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,12 +26,8 @@ class AccountController extends Controller
     {
         // Recupere l'utilisateur connecte
         $user = $request->user();
-        // Charge le profil de l'utilisateur
-        if ($user->role === 'freelance') {
-            $user->load('profil');
-        }
         // Retourne les informations de l'utilisateur
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Modifie les informations de l'utilisateur connecte
@@ -44,7 +41,7 @@ class AccountController extends Controller
         // Modifie les informations envoyees
         $user->update($data);
         // Retourne statut 200 avec l'utilisateur mis a jour
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Televerser l'avatar de l'utilisateur
@@ -63,7 +60,7 @@ class AccountController extends Controller
             'avatar' => $request->hasFile('avatar') ? $request->file('avatar')->store('avatars', 'public') : null,
         ]);
         // Retourne statut 200 avec l'utilisateur mis a jour
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Change le mot de passe de l'utilisateur
@@ -91,7 +88,7 @@ class AccountController extends Controller
         // Marquer l'onboarding comme termine
         $user->update(['onboarding_termine' => true]);
         // Retourner une reponse de succes
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Passer le role de l'utilisateur a freelance durant l'onboarding
@@ -113,8 +110,10 @@ class AccountController extends Controller
             $user->profil()->firstOrCreate([
                 'user_id' => $user->id,
             ]);
+            // charge son profil
+            $user->load('profil');
             // Retourner l'utilisateur avec son profil charge
-            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user->load('profil')]);
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         });
     }
     /**
@@ -133,7 +132,7 @@ class AccountController extends Controller
             // Activer le compte
             $user->update(['status' => 'actif']);
             // Retourne une reponse succes
-            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         }
         // Retourne une reponse erreur (compte deja actif)
         return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
@@ -154,7 +153,7 @@ class AccountController extends Controller
             // Desactiver le compte
             $user->update(['status' => 'inactif']);
             // Retourne une reponse succes
-            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => $user]);
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         }
         // Retourne une reponse erreur (compte deja inactif)
         return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);

@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Requests\Freelance\Profil\UpdateRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
 /**
@@ -14,14 +15,6 @@ use Illuminate\Http\Request;
  */
 class ProfilController extends Controller
 {
-    /**
-     * Retourne les informations du profil de l'utilisateur connecte
-     */
-    public function show(Request $request)
-    {
-        $user = $request->user();
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['profil' => $user->profil]);
-    }
     /**
      * Modifie les informations du profil de l'utilisateur connecte
      */
@@ -33,8 +26,10 @@ class ProfilController extends Controller
         $data = $request->validated();
         // Modifie les informations envoyees
         $user->profil()->update($data);
+        // Actualiser les donnees de l'utilisateur
+        $user->refresh();
         // Retourne statut 200 avec le profil mis a jour
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['profil' => $user->profil]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Gestion des competences de l'utilisateur connecte

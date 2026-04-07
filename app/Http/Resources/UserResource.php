@@ -25,9 +25,11 @@ class UserResource extends JsonResource
             'role' => $this->role,
             'status' => $this->status,
             'derniere_activite' => $this->derniere_activite,
+            'onboarding_termine' => $this->onboarding_termine,
             'avatar_url' => $this->avatar_url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'profil' => $this->profil ? new ProfilResource($this->profil) : null
         ];
     }
 }
