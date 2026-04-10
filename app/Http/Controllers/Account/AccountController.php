@@ -165,6 +165,10 @@ class AccountController extends Controller
     {
         // Recupere l'utilisateur authentifie
         $user = $request->user();
+        // Supprimer l'ancien avatar s'il existe
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
         // Supprime le compte de l'utilisateur
         $user->delete();
         // Retourne une reponse succes
