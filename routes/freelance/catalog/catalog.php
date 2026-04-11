@@ -18,21 +18,21 @@ Route::controller(ServiceController::class)
         // Creation d'un service
         Route::post('', 'store');
         // Affiche un service specifique
-        Route::get('{service:slug}','show');
+        Route::get('{service:slug}', 'show');
         // Mettre a jour les informations d'un service
-        Route::patch('{service}', 'update');
+        Route::patch('{service:slug}', 'update');
         // Supprimer un service existant
-        Route::delete('{service}','destroy');
+        Route::delete('{service:slug}', 'destroy');
         /**
          * Gestion des categories de services
          */
-        Route::put('{service}/categories','syncCategories');
+        Route::put('{service:slug}/categories', 'syncCategories');
         /**
          * Gestion des competences de services
          */
-        Route::put('{service}/competences', 'syncCompetences');
+        Route::put('{service:slug}/competences', 'syncCompetences');
         /**
          * Gestion des fichiers de services
          */
-        Route::put('{service}/fichiers', 'syncFichiers');
+        Route::put('{service:slug}/fichiers', 'syncFichiers');
     });
