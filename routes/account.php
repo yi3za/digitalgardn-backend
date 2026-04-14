@@ -24,6 +24,8 @@ Route::controller(AccountController::class)
         Route::patch('complete-onboarding', 'completeOnboarding');
         // Change le role de l'utilisateur vers freelance s'il n'a pas fini l'onboarding
         Route::patch('switch-to-freelance', 'switchToFreelance');
+        // Synchronise les competences de l'utilisateur connecte (freelance uniquement)
+        Route::put('competences', 'syncCompetences')->middleware('role:freelance');
         // Active le compte utilisateur s'il est inactif
         Route::patch('activate-account', 'activateAccount');
         // Desactive le compte utilisateur s'il est actif

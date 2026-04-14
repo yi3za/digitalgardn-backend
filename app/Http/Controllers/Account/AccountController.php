@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\ChangePasswordRequest;
 use App\Http\Requests\Account\UpdateInfoRequest;
 use App\Http\Requests\Account\UploadAvatarRequest;
+use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -115,6 +116,20 @@ class AccountController extends Controller
             // Retourner l'utilisateur avec son profil charge
             return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         });
+    }
+    /**
+     * Gestion des competences de l'utilisateur connecte
+     */
+    public function syncCompetences(SyncCompetencesRequest $request)
+    {
+        // Recupere l'utilisateur connecte
+        $user = $request->user();
+        // Recupere les IDs des competences validees
+        $competencesIds = $request->validated('competences');
+        // Supprime les anciennes relations et ajoute les nouvelles
+        $user->competences()->sync($competencesIds);
+        // Retourne une response succes
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
     }
     /**
      * Active le compte de l'utilisateur authentifie s'il est inactif
