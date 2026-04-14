@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $me = User::create([
             'name' => 'yaaza',
             'username' => 'yaaza',
             'email' => 'yaaza@gmail.com',
@@ -21,8 +21,9 @@ class UserSeeder extends Seeder
             'password' => 'yaazayaaza',
         ]);
         $users = User::factory(20)->create();
+        $users = $users->prepend($me);
         foreach ($users as $user) {
-            $competencesIds = Competence::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 10))->pluck('id')->toArray();
+            $competencesIds = Competence::whereNotNull('parent_id')->inRandomOrder()->take(rand(1, 5))->pluck('id')->toArray();
             $user->competences()->attach($competencesIds);
         }
     }

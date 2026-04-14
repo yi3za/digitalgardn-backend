@@ -29,7 +29,8 @@ class UserResource extends JsonResource
             'avatar_url' => $this->avatar_url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'profil' => $this->profil ? new ProfilResource($this->profil) : null
+            'profil' => $this->when($this->role !== 'client', new ProfilResource($this->profil)),
+            'competences' => $this->when($this->role !== 'client', $this->competences?->pluck('id')),
         ];
     }
 }

@@ -78,18 +78,4 @@ class User extends Authenticatable
         // Utilise la methode getImageUrl du Trait  pour generer l'URL complete
         return $this->getImageUrl('avatar', 'avatars/default.webp');
     }
-    /**
-     * Cette methode est appelee automatiquement par Laravel
-     */
-    protected static function booted()
-    {
-        /**
-         * Declenche automatiquement a chaque fois qu'un utilisateur est recupere depuis la base de donnees
-         */
-        static::retrieved(function ($user) {
-            if ($user->role === 'freelance') {
-                $user->load('profil');
-            }
-        });
-    }
 }
