@@ -13,32 +13,22 @@ use App\Models\Competence;
 class CompetenceController extends Controller
 {
     /**
-     * Liste tous les competences
+     * Liste toutes les competences avec leurs enfants
      */
     public function index()
     {
-        // Recupere les competences principales actives, triees par ordre
-        $competences = Competence::where(['parent_id' => null, 'est_active' => true])
+        // Recupere les competences parents avec leurs enfants actifs
+        $competences = Competence::whereNull('parent_id')
+            ->where('est_active', true)
+            ->with([
+                'enfants' => function ($q) {
+                    $q->where('est_active', true)->orderBy('ordre');
+                }
+            ])
             ->orderBy('ordre')
             ->get();
-        // Retourne la liste au format JSON avec le code HTTP 200
+        // Retourne la structure complete en JSON
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['competences' => $competences]);
-    }
-    /**
-     * Affiche une competence specifique
-     */
-    public function show(Competence $competence)
-    {
-        // Si la competence n'est pas active ou a un parent, retourne 404
-        if (!$competence->est_active || $competence->parent_id !== null) {
-            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
-        }
-        // Charge egalement les enfants actifs, tries par ordre
-        $competence->load([
-            'enfants' => fn($q) => $q->orderBy('ordre')->where('est_active', true),
-        ]);
-        // Retourne la competence avec ses enfants au format JSON avec code HTTP 200
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['competence' => $competence]);
     }
     /**
      * Liste tous les services d'une competence

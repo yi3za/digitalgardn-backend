@@ -15,10 +15,8 @@ use App\Http\Controllers\Public\Catalog\ServiceController;
 Route::prefix('categories')
     ->controller(CategorieController::class)
     ->group(function () {
-        // Liste tous les categories
+        // Liste toutes les categories avec leurs sous-categories
         Route::get('', 'index');
-        // Affiche une categorie specifique
-        Route::get('{categorie:slug}', 'show');
         // Liste tous les services d'une categorie
         Route::get('{categorie:slug}/services', 'servicesParCategorie');
     });
@@ -41,10 +39,8 @@ Route::prefix('services')
 Route::prefix('competences')
     ->controller(CompetenceController::class)
     ->group(function () {
-        // Liste tous les competences
+        // Liste toutes les competences avec leurs enfants
         Route::get('', 'index');
-        // Affiche une competence specifique
-        Route::get('{competence:slug}', 'show');
         // Liste tous les services d'une competence
         Route::get('{competence:slug}/services', 'servicesParCompetence');
     });

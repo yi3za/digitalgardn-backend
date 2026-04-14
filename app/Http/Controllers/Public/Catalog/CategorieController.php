@@ -13,32 +13,23 @@ use App\Models\Categorie;
 class CategorieController extends Controller
 {
     /**
-     * Liste tous les categories
+     * Liste toutes les categories avec leurs sous-categories
      */
     public function index()
     {
-        // Recupere les categories principales actives, triees par ordre
-        $categories = Categorie::where(['parent_id' => null, 'est_active' => true])
+        // Recupere les categories parents avec leurs enfants actifs
+        $categories = Categorie::whereNull('parent_id')
+            ->where('est_active', true)
+            ->with([
+                'enfants' => function ($q) {
+                    $q->where('est_active', true)->orderBy('ordre');
+                }
+            ])
             ->orderBy('ordre')
             ->get();
-        // Retourne la liste au format JSON avec le code HTTP 200
+
+        // Retourne la structure complete en JSON
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['categories' => $categories]);
-    }
-    /**
-     * Affiche une categorie specifique
-     */
-    public function show(Categorie $categorie)
-    {
-        // Si la categorie n'est pas active ou a un parent, retourne 404
-        if (!$categorie->est_active || $categorie->parent_id !== null) {
-            return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
-        }
-        // Charge egalement les enfants actifs, tries par ordre
-        $categorie->load([
-            'enfants' => fn($q) => $q->orderBy('ordre')->where('est_active', true),
-        ]);
-        // Retourne la categorie avec ses enfants au format JSON avec code HTTP 200
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['categorie' => $categorie]);
     }
     /**
      * Liste tous les services d'une categorie
