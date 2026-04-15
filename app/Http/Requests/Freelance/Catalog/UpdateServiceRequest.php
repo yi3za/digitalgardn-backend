@@ -26,7 +26,7 @@ class UpdateServiceRequest extends FormRequest
     {
         return [
             'titre' => ['sometimes', 'required', 'string', 'max:255'],
-            'description' => ['sometimes', 'required', 'string'],
+            'description' => ['sometimes', 'required', 'string', 'min:150', 'max:600'],
             'prix_base' => ['sometimes', 'required', 'numeric', 'min:0'],
             'delai_livraison' => ['sometimes', 'required', 'integer', 'min:1'],
             'revisions' => ['sometimes', 'nullable', 'integer', 'min:0'],

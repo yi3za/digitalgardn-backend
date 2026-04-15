@@ -26,7 +26,7 @@ class StoreServiceRequest extends FormRequest
     {
         return [
             'titre' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
+            'description' => ['required', 'string', 'min:150', 'max:600'],
             'prix_base' => ['required', 'numeric', 'min:0'],
             'delai_livraison' => ['required', 'integer', 'min:1'],
             'revisions' => ['nullable', 'integer', 'min:0'],
