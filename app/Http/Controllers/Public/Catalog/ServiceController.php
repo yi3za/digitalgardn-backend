@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public\Catalog;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 
 /**
@@ -18,13 +19,20 @@ class ServiceController extends Controller
     public function index()
     {
         /**
-         * Recupere tous les sevices publies avec :
+         * Recupere tous les services publies avec :
          * - leur utilisateur actif
          * - leur fichier principale
+         * - categories
+         * - competences
          */
-        $services = Service::with('user', 'fichierPrincipale')->where('statut', 'publie')->whereHas('user', fn($q) => $q->where('status', 'actif'))->get();
-        // Retourne la liste au format JSON avec le code HTTP 200
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => $services]);
+        $services = Service::with(['user', 'fichierPrincipale', 'categories', 'competences'])
+            ->where('statut', 'publie')
+            ->whereHas('user', fn($q) => $q->where('status', 'actif'))
+            ->get();
+        // transformation via Resource
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, [
+            'services' => ServiceResource::collection($services),
+        ]);
     }
     /**
      * Affiche un service specifique
@@ -39,10 +47,11 @@ class ServiceController extends Controller
          * Recupere un service specifique publie avec :
          * - leur utilisateur actif
          * - tous ses fichiers
-         * - toutes ses categories (enfants avec leur parent), tous actifs
+         * - son fichier principale
+         * - toutes ses categories et competences (enfants avec leur parent), tous actifs
          */
-        $service->load(['user', 'fichiers', 'categories' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true)]);
+        $service->load(['user', 'fichiers', 'fichierPrincipale', 'categories' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true), 'competences' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true)]);
         // Retourne le service au format JSON avec le code HTTP 200
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
     }
 }

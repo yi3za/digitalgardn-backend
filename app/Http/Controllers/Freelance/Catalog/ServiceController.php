@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Freelance\Catalog;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServiceResource;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
@@ -28,7 +29,7 @@ class ServiceController extends Controller
         // Recupere tous ses services avec leur fichier principale
         $services = Service::with('fichierPrincipale')->where('user_id', $user->id)->orderByDesc('updated_at')->get();
         // Retourner la liste
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => $services]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => ServiceResource::collection($services)]);
     }
     /**
      * Creation d'un service par le freelance
@@ -40,7 +41,7 @@ class ServiceController extends Controller
         // Creer un nouveau service
         $service = Service::create($data);
         // Retourner la service cree
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
     }
     /**
      * Affiche un service specifique
@@ -54,9 +55,9 @@ class ServiceController extends Controller
             return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         // Charger les relations
-        $service->load(['fichiers', 'categories' => fn($q) => $q->where('est_active', true)]);
+        $service->load(['user', 'fichiers', 'fichierPrincipale', 'categories' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true), 'competences' => fn($q) => $q->with('parent')->whereHas('parent', fn($q) => $q->where('est_active', true))->where('est_active', true)]);
         // Retourne le service
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
     }
     /**
      * Mettre a jour les informations d'un service
@@ -68,7 +69,7 @@ class ServiceController extends Controller
         // Mettre a jour le service avec les donnees fournies
         $service->update($data);
         // Retourner le service mis a jour
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => $service]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
     }
     /**
      * Supprimer un service existant
