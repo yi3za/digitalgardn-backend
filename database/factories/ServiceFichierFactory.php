@@ -18,8 +18,8 @@ class ServiceFichierFactory extends Factory
     public function definition(): array
     {
         return [
-            'chemin' => $this->faker->imageUrl(600, 400),
-            'type' => $this->faker->randomElement(['image', 'video']),
+            'chemin' => "",
+            'type' => $this->faker->randomElement(['image']),
             'ordre' => $this->faker->numberBetween(0, 5),
             'est_principale' => false,
         ];
