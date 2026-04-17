@@ -21,6 +21,8 @@ Route::middleware(['auth:sanctum', 'activity'])->group(function () {
      * Routes liees a l'utilisateur connecte (/me)
      */
     Route::prefix('me')->group(function () {
+        // Inclusion des routes de messagerie
+        require __DIR__ . '/messages.php';
         // Inclusion des routes de gestion du compte utilisateur connecte
         require __DIR__ . '/account.php';
         /**

@@ -66,6 +66,27 @@ class User extends Authenticatable
         return $this->belongsToMany(Competence::class)->orderBy('ordre');
     }
     /**
+     * Relation : conversations initiees par l'utilisateur
+     */
+    public function conversationsSent()
+    {
+        return $this->hasMany(Conversation::class, 'sender_id');
+    }
+    /**
+     * Relation : conversations recues par l'utilisateur
+     */
+    public function conversationsReceived()
+    {
+        return $this->hasMany(Conversation::class, 'receiver_id');
+    }
+    /**
+     * Relation : messages envoyes par l'utilisateur
+     */
+    public function messagesSent()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+    /**
      * Ajoute automatiquement l'attribut 'avatar_url' au JSON du modele
      *
      * Remarque : chaque nom inscrit dans $appends doit avoir un accessor correspondant
