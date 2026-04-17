@@ -13,7 +13,7 @@
 #
 
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/auth'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [env('FRONTEND_URL')],
     'allowed_headers' => ['*'],
