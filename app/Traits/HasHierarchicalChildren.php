@@ -47,6 +47,10 @@ trait HasHierarchicalChildren
         // Executer la requete pour obtenir les enfants
         $enfants = $queryEnfants->get();
         // Parcourir chaque enfant pour recuperer ses services
-        return $enfants->flatMap(fn($enfant) => $this->fetchServicesForEnfant($enfant, $whereServices, $whereUser));
+        // et supprimer les doublons (meme service lie a plusieurs enfants)
+        return $enfants
+            ->flatMap(fn($enfant) => $this->fetchServicesForEnfant($enfant, $whereServices, $whereUser))
+            ->unique('id')
+            ->values();
     }
 }

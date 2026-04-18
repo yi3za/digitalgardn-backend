@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Public\Catalog;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServiceResource;
 use App\Models\Competence;
 
 /**
@@ -23,7 +24,7 @@ class CompetenceController extends Controller
             ->with([
                 'enfants' => function ($q) {
                     $q->where('est_active', true)->orderBy('ordre');
-                }
+                },
             ])
             ->orderBy('ordre')
             ->get();
@@ -42,6 +43,6 @@ class CompetenceController extends Controller
         // Recupere tous les services
         $services = $competence->servicesAvecDetails(['est_active' => true], ['statut' => 'publie'], ['status' => 'actif']);
         // Retourne les services au format JSON avec le code HTTP 200
-        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => $services]);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => ServiceResource::collection($services)]);
     }
 }
