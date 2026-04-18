@@ -7,6 +7,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Public\Catalog\CategorieController;
 use App\Http\Controllers\Public\Catalog\CompetenceController;
+use App\Http\Controllers\Public\Catalog\FreelancerController;
 use App\Http\Controllers\Public\Catalog\ServiceController;
 
 /**
@@ -44,3 +45,14 @@ Route::prefix('competences')
         // Liste tous les services d'une competence
         Route::get('{competence:slug}/services', 'servicesParCompetence');
     });
+
+/**
+ * Routes publiques pour les freelances
+ */
+Route::prefix('freelancers')
+    ->controller(FreelancerController::class)
+    ->group(function () {
+        // Affiche un freelance specifique avec ses services publies
+        Route::get('{user:username}', 'show');
+    });
+

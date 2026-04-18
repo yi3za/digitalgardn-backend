@@ -95,7 +95,7 @@ class ServiceController extends Controller
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->categories()->sync($categoriesIds);
         // Retourne une response succes
-        return ApiResponse::send(ApiCodes::SUCCESS, 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['serviceStatut' => $service->statut]);
     }
     /**
      * Gestion des competences de services
@@ -107,7 +107,7 @@ class ServiceController extends Controller
         // Supprime les anciennes relations et ajoute les nouvelles
         $service->competences()->sync($competencesIds);
         // Retourne une response succes
-        return ApiResponse::send(ApiCodes::SUCCESS, 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['serviceStatut' => $service->statut]);
     }
     /**
      * Gestion des fichiers de services
@@ -139,6 +139,6 @@ class ServiceController extends Controller
         // Cree plusieures enregistrements d'un coup
         $service->fichiers()->createMany($data);
         // Retourne une response succes
-        return ApiResponse::send(ApiCodes::SUCCESS, 200);
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['serviceStatut' => $service->statut]);
     }
 }
