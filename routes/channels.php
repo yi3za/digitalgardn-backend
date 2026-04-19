@@ -16,3 +16,10 @@ Broadcast::channel('conversations.{conversationId}', function (User $user, int $
         })
         ->exists();
 });
+
+/**
+ * Autorisation du canal prive utilisateur pour les notifications de nouvelles conversations
+ */
+Broadcast::channel('users.{userId}', function (User $user, int $userId) {
+    return $user->id === $userId;
+});
