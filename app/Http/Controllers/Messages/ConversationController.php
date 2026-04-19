@@ -23,9 +23,16 @@ class ConversationController extends Controller
         // Recupere l'utilisateur connecte
         $user = $request->user();
         // Recupere ses conversations avec les utilisateurs lies et le dernier message
+        // - Si l'utilisateur est le sender, affiche toujours
+        // - Si l'utilisateur est le receiver, affiche seulement s'il y a au moins un message
         $conversations = Conversation::with(['sender', 'receiver', 'latestMessage.sender'])
             ->where(function ($query) use ($user) {
-                $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+                // Cas 1: L'utilisateur est le sender
+                $query->where('sender_id', $user->id)
+                    // Cas 2: L'utilisateur est le receiver ET il y a des messages
+                    ->orWhere(function ($q) use ($user) {
+                    $q->where('receiver_id', $user->id)->whereHas('messages');
+                });
             })
             ->orderByDesc('last_message_at')
             ->orderByDesc('updated_at')
@@ -40,14 +47,20 @@ class ConversationController extends Controller
     {
         // Donnees validees
         $data = $request->validated();
-        // Normaliser l'ordre des deux utilisateurs pour garantir l'unicite
-        $ids = [$request->user()->id, (int) $data['receiver_id']];
-        sort($ids);
-        // Creer la conversation si elle n'existe pas deja
-        $conversation = Conversation::firstOrCreate([
-            'sender_id' => $ids[0],
-            'receiver_id' => $ids[1],
-        ]);
+        $receiverId = (int) $data['receiver_id'];
+        $userId = $request->user()->id;
+        // Chercher la conversation existante dans n'importe quel direction
+        $conversation = Conversation::where(function ($query) use ($userId, $receiverId) {
+            $query->where(['sender_id' => $userId, 'receiver_id' => $receiverId])
+                ->orWhere(['sender_id' => $receiverId, 'receiver_id' => $userId]);
+        })->first();
+        // Creer la conversation si elle n'existe pas
+        if (!$conversation) {
+            $conversation = Conversation::create([
+                'sender_id' => $userId,
+                'receiver_id' => $receiverId,
+            ]);
+        }
         // Retourner la conversation creee ou existante
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['conversation' => new ConversationResource($conversation)]);
     }
