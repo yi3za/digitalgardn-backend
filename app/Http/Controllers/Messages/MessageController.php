@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Messages;
 
+use App\Events\ConversationCreated;
 use App\Events\MessageSent;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
@@ -50,6 +51,8 @@ class MessageController extends Controller
         if (!$this->isConversationParticipant($user->id, $conversation)) {
             return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
+        // Determiner si ce message sera le premier de la conversation
+        $isFirstMessage = !$conversation->messages()->exists();
         // Creer le message et mettre a jour la date du dernier message
         $message = DB::transaction(function () use ($request, $conversation, $user) {
             // Creer le message
@@ -63,6 +66,10 @@ class MessageController extends Controller
             ]);
             return $message->load('sender');
         });
+        // Si la conversation devient visible pour la premiere fois, diffuser l'evenement correspondant
+        if ($isFirstMessage) {
+            broadcast(new ConversationCreated($conversation));
+        }
         // Broadcast du message aux deux participants de la conversation
         broadcast(new MessageSent($message));
         // Retourner le message cree
