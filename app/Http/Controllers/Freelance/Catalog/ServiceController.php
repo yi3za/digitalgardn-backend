@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Http\Requests\Freelance\Catalog\StoreServiceRequest;
 use App\Http\Requests\Freelance\Catalog\UpdateServiceRequest;
+use App\Http\Requests\Freelance\Catalog\UpdateServiceStatusRequest;
 use App\Http\Requests\Freelance\Catalog\SyncCategoriesRequest;
 use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Requests\Freelance\Catalog\SyncFichiersRequest;
@@ -64,11 +65,48 @@ class ServiceController extends Controller
      */
     public function update(Service $service, UpdateServiceRequest $request)
     {
+        // Verifie si l'utilisateur connecte est le proprietaire du service
+        if ($request->user()->id !== $service->user_id) {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
         // Recuperer les donnees validees
         $data = $request->validated();
         // Mettre a jour le service avec les donnees fournies
         $service->update($data);
         // Retourner le service mis a jour
+        return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
+    }
+    /**
+     * Changer le statut d'un service selon des transitions autorisees
+     */
+    public function updateStatus(Service $service, UpdateServiceStatusRequest $request)
+    {
+        // Verifie si l'utilisateur connecte est le proprietaire du service
+        if ($request->user()->id !== $service->user_id) {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Statut actuel et cible
+        $from = $service->statut;
+        $to = $request->validated('statut');
+        // Si aucun changement, retourner succes avec l'etat courant
+        if ($from === $to) {
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
+        }
+        // Transitions autorisees pour le freelance
+        $allowedTransitions = [
+            'brouillon' => ['en_attente_approbation'],
+            'rejete' => ['en_attente_approbation'],
+            'en_pause' => ['en_attente_approbation'],
+            'publie' => ['en_pause'],
+            'en_attente_approbation' => ['en_pause'],
+        ];
+        // Verifie que la transition est autorisee
+        if (!in_array($to, $allowedTransitions[$from] ?? [], true)) {
+            return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
+        }
+        // Appliquer le nouveau statut
+        $service->update(['statut' => $to]);
+        // Retourne le service mis a jour
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
     }
     /**

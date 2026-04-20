@@ -21,6 +21,8 @@ Route::controller(ServiceController::class)
         Route::get('{service:slug}', 'show');
         // Mettre a jour les informations d'un service
         Route::patch('{service:slug}', 'update');
+        // Changer le statut d'un service selon des transitions autorisees
+        Route::patch('{service:slug}/status', 'updateStatus');
         // Supprimer un service existant
         Route::delete('{service:slug}', 'destroy');
         /**

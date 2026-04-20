@@ -5,9 +5,9 @@ namespace App\Http\Requests\Freelance\Catalog;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Requete de mise a jour d'un service par un freelance
+ * Requete de mise a jour du statut d'un service par un freelance
  */
-class UpdateServiceRequest extends FormRequest
+class UpdateServiceStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,7 @@ class UpdateServiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'titre' => ['sometimes', 'required', 'string', 'max:255'],
-            'description' => ['sometimes', 'required', 'string', 'min:150', 'max:600'],
-            'prix_base' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'delai_livraison' => ['sometimes', 'required', 'integer', 'min:1'],
-            'revisions' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'statut' => ['required', 'in:en_pause,en_attente_approbation'],
         ];
     }
 }
