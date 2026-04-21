@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Portefeuille;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,10 @@ class RegisterController extends Controller
             unset($data['remember']);
             // Creation d'un nouvel utilisateur
             $user = User::create($data);
+            // Creation du portefeuille initial associe a l'utilisateur
+            Portefeuille::create([
+                'user_id' => $user->id,
+            ]);
             // Authentification automatique
             Auth::login($user, $remember);
             // Actualiser les donnees de l'utilisateur
