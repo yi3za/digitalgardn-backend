@@ -6,6 +6,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\PortefeuilleController;
 
 /**
  * Routes de gestion du compte utilisateur connecte
@@ -34,4 +35,18 @@ Route::controller(AccountController::class)
         Route::delete('', 'destroy');
         // Deconnecte l'utilisateur
         Route::post('logout', 'logout');
+    });
+
+/**
+ * Routes liees au portefeuille de l'utilisateur connecte
+ */
+Route::prefix('portefeuille')
+    ->controller(PortefeuilleController::class)
+    ->group(function () {
+        // Recupere les informations du portefeuille
+        Route::get('', 'show');
+        // Recupere l'historique des transactions du portefeuille
+        Route::get('transactions', 'transactions');
+        // Recharge le portefeuille d'un montant donne (simulation)
+        Route::post('recharge', 'recharge');
     });

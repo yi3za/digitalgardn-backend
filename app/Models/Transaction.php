@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction extends Model
 {
+    // Le schema contient created_at uniquement (pas de updated_at)
+    const UPDATED_AT = null;
     // Champs pouvant etre remplis en masse
     protected $fillable = ['portefeuille_id', 'commande_id', 'type', 'montant'];
     // Casts pour le champ montant
