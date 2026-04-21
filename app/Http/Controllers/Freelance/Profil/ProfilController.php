@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Freelance\Catalog\SyncCompetencesRequest;
 use App\Http\Requests\Freelance\Profil\UpdateRequest;
 use App\Http\Resources\UserResource;
-use Illuminate\Http\Request;
 
 /**
  * Gestion des informations du profil de l'utilisateur
