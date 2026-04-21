@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 /**
  * Model : Service
@@ -24,6 +23,13 @@ class Service extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    /**
+     * Relation : un service possede plusieurs commandes
+     */
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class);
     }
     /**
      * Relation : un service appartient a plusieurs categories

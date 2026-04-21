@@ -59,6 +59,27 @@ class User extends Authenticatable
         return $this->hasMany(Service::class);
     }
     /**
+     * Relation : un utilisateur possede un portefeuille
+     */
+    public function portefeuille()
+    {
+        return $this->hasOne(Portefeuille::class);
+    }
+    /**
+     * Relation : un utilisateur (client) a plusieurs commandes
+     */
+    public function commandesAsClient()
+    {
+        return $this->hasMany(Commande::class, 'client_id');
+    }
+    /**
+     * Relation : un utilisateur (freelance) a plusieurs commandes
+     */
+    public function commandesAsFreelance()
+    {
+        return $this->hasMany(Commande::class, 'freelance_id');
+    }
+    /**
      * Relation : un utilisateur appartient a plusieurs competences
      */
     public function competences()
