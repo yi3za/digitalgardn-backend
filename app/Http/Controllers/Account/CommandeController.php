@@ -84,10 +84,10 @@ class CommandeController extends Controller
         $commande = DB::transaction(function () use ($user, $service, $data, $montant) {
             $clientPortefeuille = Portefeuille::firstOrCreate(['user_id' => $user->id]);
             $freelancePortefeuille = Portefeuille::firstOrCreate(['user_id' => $service->user_id]);
-            $clientPortefeuille = Portefeuille::whereKey($clientPortefeuille->id)->lockForUpdate()->firstOrFail();
-            $freelancePortefeuille = Portefeuille::whereKey($freelancePortefeuille->id)->lockForUpdate()->firstOrFail();
+            $clientPortefeuille = Portefeuille::whereKey($clientPortefeuille->id)->lockForUpdate()->first();
+            $freelancePortefeuille = Portefeuille::whereKey($freelancePortefeuille->id)->lockForUpdate()->first();
             // Stoppe la creation si le client n'a pas assez de solde
-            if ((float) $clientPortefeuille->solde_disponible < $montant) {
+            if (!$clientPortefeuille || !$freelancePortefeuille || (float) $clientPortefeuille->solde_disponible < $montant) {
                 return null;
             }
             // Cree la commande
