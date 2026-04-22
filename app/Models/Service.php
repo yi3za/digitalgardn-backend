@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\TableStates\ServiceStatusState;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,7 +80,7 @@ class Service extends Model
          * - le service est encore en brouillon
          */
         static::updating(function ($service) {
-            if ($service->isDirty('titre') && $service->statut === 'brouillon') {
+            if ($service->isDirty('titre') && $service->statut === ServiceStatusState::BROUILLON) {
                 $service->slug = $service->generateSlugUnique($service->titre);
             }
         });

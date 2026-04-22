@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Public\Catalog;
 
+use App\Constants\TableStates\ServiceStatusState;
+use App\Constants\TableStates\UserStatusState;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -42,7 +44,7 @@ class CategorieController extends Controller
             return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         // Recupere tous les services
-        $services = $categorie->servicesAvecDetails(['est_active' => true], ['statut' => 'publie'], ['status' => 'actif']);
+        $services = $categorie->servicesAvecDetails(['est_active' => true], ['statut' => ServiceStatusState::PUBLIE], ['status' => UserStatusState::ACTIF]);
         // Retourne les services au format JSON avec le code HTTP 200
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['services' => ServiceResource::collection($services)]);
     }

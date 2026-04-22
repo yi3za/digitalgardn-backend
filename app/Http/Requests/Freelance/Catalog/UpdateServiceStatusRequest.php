@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Freelance\Catalog;
 
+use App\Constants\TableStates\ServiceStatusState;
+use App\Constants\TableStates\UserRoleState;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -14,7 +16,7 @@ class UpdateServiceStatusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null && $this->user()->role === 'freelance';
+        return $this->user() !== null && $this->user()->role === UserRoleState::FREELANCE;
     }
 
     /**
@@ -25,7 +27,7 @@ class UpdateServiceStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'statut' => ['required', 'in:en_pause,en_attente_approbation'],
+            'statut' => ['required', 'in:' . implode(',', ServiceStatusState::freelanceTargetStatuses())],
         ];
     }
 }

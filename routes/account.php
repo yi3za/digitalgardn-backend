@@ -7,6 +7,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\PortefeuilleController;
+use App\Constants\TableStates\UserRoleState;
 
 /**
  * Routes de gestion du compte utilisateur connecte
@@ -26,7 +27,7 @@ Route::controller(AccountController::class)
         // Change le role de l'utilisateur vers freelance s'il n'a pas fini l'onboarding
         Route::patch('switch-to-freelance', 'switchToFreelance');
         // Synchronise les competences de l'utilisateur connecte (freelance uniquement)
-        Route::put('competences', 'syncCompetences')->middleware('role:freelance');
+        Route::put('competences', 'syncCompetences')->middleware('role:' . UserRoleState::FREELANCE);
         // Active le compte utilisateur s'il est inactif
         Route::patch('activate-account', 'activateAccount');
         // Desactive le compte utilisateur s'il est actif

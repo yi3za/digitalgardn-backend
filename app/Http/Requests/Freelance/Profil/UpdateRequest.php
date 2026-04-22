@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Freelance\Profil;
 
+use App\Constants\TableStates\UserRoleState;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -14,7 +15,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user() !== null  && $this->user()->role === 'freelance';
+        return $this->user() !== null  && $this->user()->role === UserRoleState::FREELANCE;
     }
 
     /**

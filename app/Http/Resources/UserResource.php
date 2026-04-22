@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Constants\TableStates\UserRoleState;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -29,8 +30,8 @@ class UserResource extends JsonResource
             'avatar_url' => $this->avatar_url,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'profil' => $this->when($this->role !== 'client', new ProfilResource($this->profil)),
-            'competences' => $this->when($this->role !== 'client', $this->competences?->pluck('id')),
+            'profil' => $this->when($this->role !== UserRoleState::CLIENT, new ProfilResource($this->profil)),
+            'competences' => $this->when($this->role !== UserRoleState::CLIENT, $this->competences?->pluck('id')),
         ];
     }
 }

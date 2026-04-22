@@ -9,6 +9,7 @@ use App\Http\Requests\Account\RechargePortefeuilleRequest;
 use App\Http\Resources\PortefeuilleResource;
 use App\Http\Resources\TransactionResource;
 use App\Models\Portefeuille;
+use App\Constants\TableStates\TransactionTypeState;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -62,7 +63,7 @@ class PortefeuilleController extends Controller
             $portefeuille->increment('solde_disponible', $montant);
             // Cree la transaction de recharge
             $portefeuille->transactions()->create([
-                'type' => 'recharge',
+                'type' => TransactionTypeState::RECHARGE,
                 'montant' => $montant,
             ]);
             return $portefeuille;

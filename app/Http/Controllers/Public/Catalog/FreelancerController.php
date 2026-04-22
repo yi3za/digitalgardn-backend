@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Public\Catalog;
 
+use App\Constants\TableStates\ServiceStatusState;
+use App\Constants\TableStates\UserRoleState;
+use App\Constants\TableStates\UserStatusState;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -21,7 +24,7 @@ class FreelancerController extends Controller
     public function show(User $user)
     {
         // Limiter l'acces aux freelances actifs uniquement
-        if ($user->role !== 'freelance' || $user->status !== 'actif') {
+        if ($user->role !== UserRoleState::FREELANCE || $user->status !== UserStatusState::ACTIF) {
             return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
 
@@ -29,7 +32,7 @@ class FreelancerController extends Controller
 
         $services = Service::with(['fichierPrincipale', 'categories', 'competences'])
             ->where('user_id', $user->id)
-            ->where('statut', 'publie')
+            ->where('statut', ServiceStatusState::PUBLIE)
             ->latest('created_at')
             ->get();
 

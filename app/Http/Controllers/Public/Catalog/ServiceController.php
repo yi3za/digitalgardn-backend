@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Public\Catalog;
 
+use App\Constants\TableStates\ServiceStatusState;
+use App\Constants\TableStates\UserStatusState;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -26,8 +28,8 @@ class ServiceController extends Controller
          * - competences
          */
         $services = Service::with(['user', 'fichierPrincipale', 'categories', 'competences'])
-            ->where('statut', 'publie')
-            ->whereHas('user', fn($q) => $q->where('status', 'actif'))
+            ->where('statut', ServiceStatusState::PUBLIE)
+            ->whereHas('user', fn($q) => $q->where('status', UserStatusState::ACTIF))
             ->get();
         // transformation via Resource
         return ApiResponse::send(ApiCodes::SUCCESS, 200, [
@@ -40,7 +42,7 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         // Si le service n'est pas publie ou l'utilisateur n'est pas actif, retourne 404
-        if ($service->statut !== 'publie' || $service->user->status !== 'actif') {
+        if ($service->statut !== ServiceStatusState::PUBLIE || $service->user->status !== UserStatusState::ACTIF) {
             return ApiResponse::send(ApiCodes::NOT_FOUND, 404);
         }
         /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Freelance\Catalog;
 
+use App\Constants\TableStates\ServiceStatusState;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -93,13 +94,7 @@ class ServiceController extends Controller
             return ApiResponse::send(ApiCodes::SUCCESS, 200, ['service' => new ServiceResource($service)]);
         }
         // Transitions autorisees pour le freelance
-        $allowedTransitions = [
-            'brouillon' => ['en_attente_approbation'],
-            'rejete' => ['en_attente_approbation'],
-            'en_pause' => ['en_attente_approbation'],
-            'publie' => ['en_pause'],
-            'en_attente_approbation' => ['en_pause'],
-        ];
+        $allowedTransitions = ServiceStatusState::freelanceTransitions();
         // Verifie que la transition est autorisee
         if (!in_array($to, $allowedTransitions[$from] ?? [], true)) {
             return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);

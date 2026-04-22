@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Constants\TableStates\UserRoleState;
+use App\Constants\TableStates\UserStatusState;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -106,7 +108,7 @@ class AccountController extends Controller
         // Utilisation d'une transaction pour garantir l'integrite des donnees
         return DB::transaction(function () use ($user) {
             // Mise a jour du role
-            $user->update(['role' => 'freelance']);
+            $user->update(['role' => UserRoleState::FREELANCE]);
             // Cree le profil s'il n'existe pas, sinon recupere le profil actuel
             $user->profil()->firstOrCreate([
                 'user_id' => $user->id,
@@ -139,13 +141,13 @@ class AccountController extends Controller
         // Recupere l'utilisateur
         $user = $request->user();
         // Verifie si le compte est banni
-        if ($user->status === 'banni') {
+        if ($user->status === UserStatusState::BANNI) {
             return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
         // Verifie si le compte est inactif
-        if ($user->status === 'inactif') {
+        if ($user->status === UserStatusState::INACTIF) {
             // Activer le compte
-            $user->update(['status' => 'actif']);
+            $user->update(['status' => UserStatusState::ACTIF]);
             // Retourne une reponse succes
             return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         }
@@ -160,13 +162,13 @@ class AccountController extends Controller
         // Recupere l'utilisateur
         $user = $request->user();
         // Verifie si le compte est banni
-        if ($user->status === 'banni') {
+        if ($user->status === UserStatusState::BANNI) {
             return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
         // Verifie si le compte est actif
-        if ($user->status === 'actif') {
+        if ($user->status === UserStatusState::ACTIF) {
             // Desactiver le compte
-            $user->update(['status' => 'inactif']);
+            $user->update(['status' => UserStatusState::INACTIF]);
             // Retourne une reponse succes
             return ApiResponse::send(ApiCodes::SUCCESS, 200, ['user' => new UserResource($user)]);
         }

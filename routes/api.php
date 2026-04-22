@@ -5,6 +5,7 @@
 # ------------
 
 use Illuminate\Support\Facades\Route;
+use App\Constants\TableStates\UserRoleState;
 
 // Inclusion des routes d'authentification
 require __DIR__ . '/auth.php';
@@ -28,7 +29,7 @@ Route::middleware(['auth:sanctum', 'activity'])->group(function () {
         /**
          * Routes reservees aux freelances uniquement
          */
-        Route::middleware('role:freelance')->group(function () {
+        Route::middleware('role:' . UserRoleState::FREELANCE)->group(function () {
             // Inclusion des routes de gestion du profil
             require __DIR__ . '/freelance/profil/profil.php';
             // Inclusion des routes de gestion des services
