@@ -6,6 +6,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\CommandeController;
 use App\Http\Controllers\Account\PortefeuilleController;
 use App\Constants\TableStates\UserRoleState;
 
@@ -50,4 +51,18 @@ Route::prefix('portefeuille')
         Route::get('transactions', 'transactions');
         // Recharge le portefeuille d'un montant donne (simulation)
         Route::post('recharge', 'recharge');
+    });
+
+/**
+ * Routes liees aux commandes de l'utilisateur connecte
+ */
+Route::prefix('commandes')
+    ->controller(CommandeController::class)
+    ->group(function () {
+        // Liste les commandes ou l'utilisateur est implique
+        Route::get('', 'index');
+        // Cree une nouvelle commande pour un service
+        Route::post('', 'store');
+        // Affiche une commande precise
+        Route::get('{commande}', 'show');
     });
