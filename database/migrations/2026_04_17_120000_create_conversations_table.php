@@ -14,11 +14,12 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('commande_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('last_message_at')->nullable();
             $table->timestamps();
 
-            // Une seule conversation entre les memes deux utilisateurs (ordre normalise)
-            $table->unique(['sender_id', 'receiver_id']);
+            // Assure qu'il n'y a qu'une conversation unique entre deux utilisateurs pour une commande donnee
+            $table->unique(['sender_id', 'receiver_id', 'commande_id']);
         });
     }
 
