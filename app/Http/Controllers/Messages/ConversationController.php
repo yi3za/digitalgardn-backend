@@ -25,7 +25,7 @@ class ConversationController extends Controller
         // Recupere ses conversations avec les utilisateurs lies et le dernier message
         // - Si l'utilisateur est le sender, affiche toujours
         // - Si l'utilisateur est le receiver, affiche seulement s'il y a au moins un message
-        $conversations = Conversation::with(['sender', 'receiver', 'latestMessage.sender'])
+        $conversations = Conversation::with(['sender', 'receiver', 'latestMessage.sender', 'commande.service'])
             ->where(function ($query) use ($user) {
                 // Cas 1: L'utilisateur est le sender
                 $query
@@ -49,9 +49,11 @@ class ConversationController extends Controller
         // Donnees validees
         $data = $request->validated();
         $receiverId = (int) $data['receiver_id'];
+        $commandeId = isset($data['commande_id']) ? (int) $data['commande_id'] : null;
+        // ID de l'utilisateur connecte
         $userId = $request->user()->id;
         // Chercher la conversation existante dans n'importe quel direction
-        $conversation = Conversation::whereNull('commande_id')
+        $conversation = Conversation::where('commande_id', $commandeId)
             ->where(function ($query) use ($userId, $receiverId) {
                 $query->where(['sender_id' => $userId, 'receiver_id' => $receiverId])->orWhere(['sender_id' => $receiverId, 'receiver_id' => $userId]);
             })
@@ -61,10 +63,9 @@ class ConversationController extends Controller
             $conversation = Conversation::create([
                 'sender_id' => $userId,
                 'receiver_id' => $receiverId,
-                'commande_id' => null,
+                'commande_id' => $commandeId,
             ]);
         }
-        // Retourner la conversation creee ou existante
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['conversation' => new ConversationResource($conversation)]);
     }
 }
