@@ -44,9 +44,14 @@ class ConversationResource extends JsonResource
                 return [
                     'id' => $this->commande?->id,
                     'statut' => $this->commande?->statut,
-                    'client_id' => $this->commande?->client_id,
-                    'freelance_id' => $this->commande?->freelance_id,
                     'montant' => $this->commande?->montant,
+                    'date_livraison' => $this->commande?->date_livraison,
+                    'service' => [
+                        'id' => $this->commande?->service?->id,
+                        'titre' => $this->commande?->service?->titre,
+                        'prix_base' => $this->commande?->service?->prix_base,
+                        'revisions' => $this->commande?->service?->revisions,
+                    ],
                 ];
             }),
             'last_message_at' => $this->last_message_at,
