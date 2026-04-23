@@ -26,6 +26,7 @@ class StoreConversationRequest extends FormRequest
     {
         return [
             'receiver_id' => ['required', 'integer', 'exists:users,id', 'not_in:' . $this->user()->id],
+            'commande_id' => ['nullable', 'integer', 'exists:commandes,id'],
         ];
     }
 }
