@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('freelance_id')->constrained('users')->restrictOnDelete();
             $table->foreignId('service_id')->constrained()->restrictOnDelete();
             $table->decimal('montant', 15, 2);
-            $table->enum('statut', ['en_attente', 'en_cours', 'livree', 'en_revision', 'en_litige', 'terminee', 'annulee'])->default('en_attente');
+            $table->enum('statut', ['en_attente', 'en_cours', 'livree', 'en_revision', 'terminee', 'annulee'])->default('en_attente');
             $table->text('instructions')->nullable();
             $table->dateTime('date_livraison')->nullable();
             $table->timestamps();
