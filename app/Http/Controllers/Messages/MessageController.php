@@ -64,7 +64,7 @@ class MessageController extends Controller
             $conversation->update([
                 'last_message_at' => now(),
             ]);
-            return $message->load('sender');
+            return $message;
         });
         // Si la conversation devient visible pour la premiere fois, diffuser l'evenement correspondant
         if ($isFirstMessage) {
