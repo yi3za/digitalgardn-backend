@@ -14,7 +14,7 @@ class Conversation extends Model
 {
     use HasFactory;
     // Champs pouvant etre remplis en masse
-    protected $fillable = ['sender_id', 'receiver_id', 'last_message_at'];
+    protected $fillable = ['sender_id', 'receiver_id', 'commande_id', 'last_message_at'];
     /**
      * Casts automatiques
      */
