@@ -43,4 +43,11 @@ class Commande extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+    /**
+     * Rolation : une commande a une conversation
+     */
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class);
+    }
 }
