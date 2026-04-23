@@ -28,7 +28,8 @@ class ConversationController extends Controller
         $conversations = Conversation::with(['sender', 'receiver', 'latestMessage.sender'])
             ->where(function ($query) use ($user) {
                 // Cas 1: L'utilisateur est le sender
-                $query->where('sender_id', $user->id)
+                $query
+                    ->where('sender_id', $user->id)
                     // Cas 2: L'utilisateur est le receiver ET il y a des messages
                     ->orWhere(function ($q) use ($user) {
                     $q->where('receiver_id', $user->id)->whereHas('messages');
@@ -50,15 +51,17 @@ class ConversationController extends Controller
         $receiverId = (int) $data['receiver_id'];
         $userId = $request->user()->id;
         // Chercher la conversation existante dans n'importe quel direction
-        $conversation = Conversation::where(function ($query) use ($userId, $receiverId) {
-            $query->where(['sender_id' => $userId, 'receiver_id' => $receiverId])
-                ->orWhere(['sender_id' => $receiverId, 'receiver_id' => $userId]);
-        })->first();
+        $conversation = Conversation::whereNull('commande_id')
+            ->where(function ($query) use ($userId, $receiverId) {
+                $query->where(['sender_id' => $userId, 'receiver_id' => $receiverId])->orWhere(['sender_id' => $receiverId, 'receiver_id' => $userId]);
+            })
+            ->first();
         // Creer la conversation si elle n'existe pas
         if (!$conversation) {
             $conversation = Conversation::create([
                 'sender_id' => $userId,
                 'receiver_id' => $receiverId,
+                'commande_id' => null,
             ]);
         }
         // Retourner la conversation creee ou existante
