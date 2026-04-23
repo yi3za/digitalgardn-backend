@@ -52,4 +52,11 @@ class Conversation extends Model
     {
         return $this->hasOne(Message::class)->latestOfMany();
     }
+    /**
+     * Relation : une conversation peut etre liee a une commande
+     */
+    public function commande()
+    {
+        return $this->belongsTo(Commande::class);
+    }
 }
