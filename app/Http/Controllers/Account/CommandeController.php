@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Constants\TableStates\CommandeStatusState;
 use App\Constants\TableStates\ServiceStatusState;
 use App\Constants\TableStates\TransactionTypeState;
+use App\Constants\TableStates\UserRoleState;
 use App\Constants\TableStates\UserStatusState;
+use App\Events\CommandeStatusUpdated;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -13,6 +16,7 @@ use App\Http\Resources\CommandeResource;
 use App\Models\Commande;
 use App\Models\Portefeuille;
 use App\Models\Service;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,8 +36,7 @@ class CommandeController extends Controller
         // Recupere les commandes ou l'utilisateur est client ou freelance
         $commandes = Commande::with(['client', 'freelance', 'service.fichierPrincipale'])
             ->where(function ($query) use ($user) {
-                $query->where('client_id', $user->id)
-                    ->orWhere('freelance_id', $user->id);
+                $query->where('client_id', $user->id)->orWhere('freelance_id', $user->id);
             })
             ->orderByDesc('created_at')
             ->get();
@@ -114,7 +117,7 @@ class CommandeController extends Controller
                 'type' => TransactionTypeState::GAIN,
                 'montant' => $montant,
             ]);
-            return $commande->load(['client', 'freelance', 'service.fichierPrincipale', 'transactions']);
+            return $commande;
         });
         if (!$commande) {
             return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
@@ -122,6 +125,112 @@ class CommandeController extends Controller
         // Retourne la commande creee
         return ApiResponse::send(ApiCodes::SUCCESS, 201, [
             'commande' => new CommandeResource($commande),
+        ]);
+    }
+    /**
+     * Met a jour le statut d'une commande
+     */
+    public function updateStatus(Request $request, Commande $commande)
+    {
+        // Recupere l'utilisateur connecte
+        $user = $request->user();
+        // Verifie que l'utilisateur appartient a la commande
+        if ($commande->client_id !== $user->id && $commande->freelance_id !== $user->id) {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Determine le role de l'utilisateur dans la commande
+        $role = $user->role;
+        // Valide le nouveau statut selon le role
+        $targetStatuses = $role === UserRoleState::FREELANCE ? CommandeStatusState::freelanceTargetStatuses() : CommandeStatusState::clientTargetStatuses();
+        // Valide que le statut cible est dans les transitions autorisees pour le statut actuel
+        $data = $request->validate([
+            'statut' => ['required', 'in:' . implode(',', $targetStatuses)],
+        ]);
+        // Verifie que la transition est autorisee pour le role de l'utilisateur
+        $transitions = $role === UserRoleState::FREELANCE ? CommandeStatusState::freelanceTransitions() : CommandeStatusState::clientTransitions();
+        // Recupere les statuts cibles autorises pour le statut actuel
+        $autorises = $transitions[$commande->statut] ?? [];
+        if (!in_array($data['statut'], $autorises)) {
+            return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
+        }
+        // Transfert de soldes + mise a jour statut dans une transaction DB
+        return DB::transaction(function () use ($commande, $data) {
+            // Si en_revision, incrementer le compteur
+            if ($data['statut'] === CommandeStatusState::EN_REVISION) {
+                // Verifie que le nombre de revisions n'est pas depasse
+                if ($commande->revisions_utilisees >= $commande->service->revisions) {
+                    return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
+                }
+                $commande->increment('revisions_utilisees');
+            }
+            // Met a jour le statut de la commande
+            $commande->statut = $data['statut'];
+            $commande->save();
+            // Effectue les operations de debloquage ou remboursement selon le nouveau statut
+            match ($data['statut']) {
+                CommandeStatusState::TERMINEE => $this->debloquer($commande),
+                CommandeStatusState::ANNULEE => $this->rembourser($commande),
+                default => null,
+            };
+            // Broadcast
+            broadcast(new CommandeStatusUpdated($commande))->toOthers();
+            // Retourne la commande mise a jour
+            return ApiResponse::send(ApiCodes::SUCCESS, 200, [
+                'commande' => new CommandeResource($commande),
+            ]);
+        });
+    }
+    /**
+     * Debloque les fonds apres terminee
+     *
+     * lors de l'achat :
+     * client.solde_disponible    - montant
+     * client.solde_en_attente    + montant
+     * freelance.solde_en_attente + montant
+     *
+     * lors de terminee :
+     * client.solde_en_attente    - montant
+     * freelance.solde_en_attente - montant
+     * freelance.solde_disponible + montant
+     */
+    private function debloquer(Commande $commande): void
+    {
+        // Retire de solde_en_attente du client
+        Portefeuille::where('user_id', $commande->client_id)->decrement('solde_en_attente', (float) $commande->montant);
+        // Retire de solde_en_attente du freelance
+        Portefeuille::where('user_id', $commande->freelance_id)->decrement('solde_en_attente', (float) $commande->montant);
+        // Ajoute a solde_disponible du freelance
+        Portefeuille::where('user_id', $commande->freelance_id)->increment('solde_disponible', (float) $commande->montant);
+        // Enregistre la transaction
+        Transaction::create([
+            'portefeuille_id' => Portefeuille::where('user_id', $commande->freelance_id)->value('id'),
+            'commande_id' => $commande->id,
+            'type' => TransactionTypeState::GAIN,
+            'montant' => $commande->montant,
+        ]);
+    }
+    /**
+     * Rembourse le client apres annulee
+     *
+     * lors de annulee :
+     * client.solde_en_attente    - montant
+     * client.solde_disponible    + montant
+     * freelance.solde_en_attente - montant
+     */
+    private function rembourser(Commande $commande): void
+    {
+        // Retire de solde_en_attente du freelance
+        Portefeuille::where('user_id', $commande->freelance_id)->decrement('solde_en_attente', (float) $commande->montant);
+        // Retire de solde_en_attente du client
+        Portefeuille::where('user_id', $commande->client_id)->decrement('solde_en_attente', (float) $commande->montant);
+        // Rembourse le client sur solde_disponible
+        Portefeuille::where('user_id', $commande->client_id)->increment('solde_disponible', (float) $commande->montant);
+        // Enregistre la transaction
+        Transaction::create([
+            'portefeuille_id' => Portefeuille::where('user_id', $commande->client_id)->value('id'),
+            'commande_id' => $commande->id,
+            'type' => TransactionTypeState::REMBOURSEMENT,
+            'montant' => $commande->montant,
         ]);
     }
 }
