@@ -68,10 +68,10 @@ class MessageController extends Controller
         });
         // Si la conversation devient visible pour la premiere fois, diffuser l'evenement correspondant
         if ($isFirstMessage) {
-            broadcast(new ConversationCreated($conversation));
+            broadcast(new ConversationCreated($conversation))->toOthers();
         }
         // Broadcast du message aux deux participants de la conversation
-        broadcast(new MessageSent($message));
+        broadcast(new MessageSent($message))->toOthers();
         // Retourner le message cree
         return ApiResponse::send(ApiCodes::SUCCESS, 200, ['message' => new MessageResource($message)]);
     }
