@@ -63,6 +63,8 @@ Route::prefix('commandes')
         Route::get('', 'index');
         // Cree une nouvelle commande pour un service
         Route::post('', 'store');
+        // Met a jour le statut d'une commande
+        Route::patch('{commande}/status', 'updateStatus');
         // Affiche une commande precise
         Route::get('{commande}', 'show');
     });
