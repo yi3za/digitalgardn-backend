@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Commande;
 use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
@@ -22,4 +23,15 @@ Broadcast::channel('conversations.{conversationId}', function (User $user, int $
  */
 Broadcast::channel('users.{userId}', function (User $user, int $userId) {
     return $user->id === $userId;
+});
+
+/**
+ * Autorisation du canal prive de commande pour les notifications de changement de statut de commande
+ */
+Broadcast::channel('commandes.{commandeId}', function (User $user, int $commandeId) {
+    $commande = Commande::query()->find($commandeId);
+    if (!$commande) {
+        return false;
+    }
+    return $commande->client_id === $user->id || $commande->freelance_id === $user->id;
 });
