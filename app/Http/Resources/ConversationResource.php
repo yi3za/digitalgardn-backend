@@ -45,6 +45,7 @@ class ConversationResource extends JsonResource
                     'id' => $this->commande?->id,
                     'statut' => $this->commande?->statut,
                     'montant' => $this->commande?->montant,
+                    'revisions_utilisees' => $this->commande?->revisions_utilisees,
                     'date_livraison' => $this->commande?->date_livraison,
                     'service' => [
                         'id' => $this->commande?->service?->id,
