@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->decimal('montant', 15, 2);
             $table->enum('statut', ['en_attente', 'en_cours', 'livree', 'en_revision', 'terminee', 'annulee'])->default('en_attente');
             $table->text('instructions')->nullable();
+            $table->unsignedInteger('revisions_utilisees')->default(0);
+
             $table->dateTime('date_livraison')->nullable();
             $table->timestamps();
         });
