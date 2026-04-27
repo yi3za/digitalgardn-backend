@@ -116,6 +116,7 @@ class CommandeController extends Controller
             $conversation = $commande->conversation()->create([
                 'sender_id' => $user->id,
                 'receiver_id' => $service->user_id,
+                'last_message_at' => now(),
             ]);
             // Si des instructions sont fournies, les envoie dans la conversation liee a la commande
             $conversation->messages()->create([
