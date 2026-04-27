@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Account;
 use App\Constants\TableStates\CommandeStatusState;
 use App\Constants\TableStates\ServiceStatusState;
 use App\Constants\TableStates\TransactionTypeState;
-use App\Constants\TableStates\UserRoleState;
 use App\Constants\TableStates\UserStatusState;
 use App\Events\CommandeStatusUpdated;
 use App\Events\ConversationCreated;
@@ -121,7 +120,7 @@ class CommandeController extends Controller
             // Si des instructions sont fournies, les envoie dans la conversation liee a la commande
             $conversation->messages()->create([
                 'sender_id' => $user->id,
-                'content' => $data['instructions'] ?? "--",
+                'content' => $data['instructions'] ?? '--',
             ]);
             // Charge les relations utiles pour l'affichage
             $commande->load('conversation');
@@ -152,16 +151,16 @@ class CommandeController extends Controller
         if ($commande->client_id !== $user->id && $commande->freelance_id !== $user->id) {
             return ApiResponse::send(ApiCodes::FORBIDDEN, 403);
         }
-        // Determine le role de l'utilisateur dans la commande
-        $role = $user->role;
+        // Verifier que l'utilisateur connecte est vendeur ou acheteur de la commande
+        $isVendeur = $user->id === $commande->freelance_id;
         // Valide le nouveau statut selon le role
-        $targetStatuses = $role === UserRoleState::FREELANCE ? CommandeStatusState::freelanceTargetStatuses() : CommandeStatusState::clientTargetStatuses();
+        $targetStatuses = $isVendeur ? CommandeStatusState::freelanceTargetStatuses() : CommandeStatusState::clientTargetStatuses();
         // Valide que le statut cible est dans les transitions autorisees pour le statut actuel
         $data = $request->validate([
             'statut' => ['required', 'in:' . implode(',', $targetStatuses)],
         ]);
         // Verifie que la transition est autorisee pour le role de l'utilisateur
-        $transitions = $role === UserRoleState::FREELANCE ? CommandeStatusState::freelanceTransitions() : CommandeStatusState::clientTransitions();
+        $transitions = $isVendeur ? CommandeStatusState::freelanceTransitions() : CommandeStatusState::clientTransitions();
         // Recupere les statuts cibles autorises pour le statut actuel
         $autorises = $transitions[$commande->statut] ?? [];
         if (!in_array($data['statut'], $autorises)) {
