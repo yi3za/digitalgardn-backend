@@ -48,6 +48,9 @@ class CommandeResource extends JsonResource
             'transactions' => $this->whenLoaded('transactions', function () {
                 return TransactionResource::collection($this->transactions);
             }),
+            'conversation' => $this->whenLoaded('conversation', function () {
+                return new ConversationResource($this->conversation);
+            }),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -8,6 +8,7 @@ use App\Constants\TableStates\TransactionTypeState;
 use App\Constants\TableStates\UserRoleState;
 use App\Constants\TableStates\UserStatusState;
 use App\Events\CommandeStatusUpdated;
+use App\Events\ConversationCreated;
 use App\Helpers\ApiCodes;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -112,11 +113,29 @@ class CommandeController extends Controller
                 'type' => TransactionTypeState::ACHAT,
                 'montant' => $montant,
             ]);
+            // Cree conversation liee a la commande
+            $conversation = $commande->conversation()->create([
+                'sender_id' => $user->id,
+                'receiver_id' => $service->user_id,
+            ]);
+            // Si des instructions sont fournies, les envoie dans la conversation liee a la commande
+            $conversation->messages()->create([
+                'sender_id' => $user->id,
+                'content' => $data['instructions'] ?? "--",
+            ]);
+            // Charge les relations utiles pour l'affichage
+            $commande->load('conversation');
+            // Retourne la commande creee
             return $commande;
         });
+        // Si la creation a echoue (ex: solde insuffisant), retourne une erreur
         if (!$commande) {
             return ApiResponse::send(ApiCodes::BAD_REQUEST, 400);
         }
+        // Apres validation et creation de la commande, broadcast de l'evenements
+        DB::afterCommit(function () use ($commande) {
+            broadcast(new ConversationCreated($commande->conversation))->toOthers();
+        });
         // Retourne la commande creee
         return ApiResponse::send(ApiCodes::SUCCESS, 201, [
             'commande' => new CommandeResource($commande),
