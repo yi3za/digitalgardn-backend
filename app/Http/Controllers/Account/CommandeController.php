@@ -106,15 +106,10 @@ class CommandeController extends Controller
             $clientPortefeuille->decrement('solde_disponible', $montant);
             $clientPortefeuille->increment('solde_en_attente', $montant);
             $freelancePortefeuille->increment('solde_en_attente', $montant);
-            // Cree les traces de transaction cote client et freelance
+            // Cree les traces de transaction cote client
             $clientPortefeuille->transactions()->create([
                 'commande_id' => $commande->id,
                 'type' => TransactionTypeState::ACHAT,
-                'montant' => $montant,
-            ]);
-            $freelancePortefeuille->transactions()->create([
-                'commande_id' => $commande->id,
-                'type' => TransactionTypeState::GAIN,
                 'montant' => $montant,
             ]);
             return $commande;
