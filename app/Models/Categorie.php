@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasHierarchicalChildren;
+use App\Traits\HasImageUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +15,8 @@ class Categorie extends Model
 {
     // HasFactory: Permet d'utiliser les factories pour ce modele
     // HasHierarchicalChildren: Gerer les relations hierarchiques et recuperer les services
-    use HasFactory, HasHierarchicalChildren;
+    // HasImageUrl: Generer l'URL d'une image stockee
+    use HasFactory, HasHierarchicalChildren, HasImageUrl;
     // Champs pouvant etre remplis en masse
     protected $fillable = ['parent_id', 'nom', 'slug', 'description', 'icone', 'ordre', 'est_active'];
     /**
@@ -37,5 +39,18 @@ class Categorie extends Model
     public function services()
     {
         return $this->belongsToMany(Service::class);
+    }
+    /**
+     * Ajoute automatiquement l'attribut 'icone_url' au JSON du modele
+     *
+     * Remarque : chaque nom inscrit dans $appends doit avoir un accessor correspondant
+     * Exemple : 'test' dans $appends necessite la methode 'getTestAttribute()'
+     */
+    protected $appends = ['icone_url'];
+    // Accessor pour recuperer l'URL complete de l'icone
+    public function getIconeUrlAttribute()
+    {
+        // Utilise la methode getImageUrl du Trait  pour generer l'URL complete
+        return $this->getImageUrl('icone', 'icones/categories/default.avif');
     }
 }

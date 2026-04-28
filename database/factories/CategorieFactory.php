@@ -23,7 +23,7 @@ class CategorieFactory extends Factory
             'nom' => ucfirst($name),
             'slug' => Str::slug($name),
             'description' => $this->faker->sentence(10),
-            'icone' => $this->faker->imageUrl(50, 50),
+            'icone' => "",
             'ordre' => $this->faker->numberBetween(0, 10),
             'est_active' => $this->faker->boolean(90),
             'parent_id' => null,

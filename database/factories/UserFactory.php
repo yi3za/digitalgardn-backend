@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'password' => 'password',
             'role' => $this->faker->randomElement(['freelance', 'client']),
             'status' => $this->faker->randomElement(['actif', 'inactif', 'banni']),
-            'avatar' => $this->faker->imageUrl(100, 100),
+            'avatar' => "",
             'derniere_activite' => $this->faker->dateTimeThisYear(),
         ];
     }

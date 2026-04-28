@@ -13,7 +13,7 @@
 #
 
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/auth'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/auth', 'PFF/digitalgardn-backend/public/'],
     'allowed_methods' => ['*'],
     'allowed_origins' => [env('FRONTEND_URL')],
     'allowed_headers' => ['*'],
